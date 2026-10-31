@@ -1,6 +1,7 @@
 local BAR_NAME = "ASDropsBar";
 local iconSize = 36;
 local ICON_GAP = 4;
+local PREVIEW_ICONS = 3;
 local MAX_LOOT_ITEMS = 20;
 local BOSS_LOOT_WINDOW = 12;
 local NO_LOOT_ICON = "Interface\\Icons\\INV_Stone_12";
@@ -338,6 +339,12 @@ local function CreateIcon(index)
 				if ( item.bossText and item.bossText ~= "" ) then GameTooltip:AddLine(item.bossText, 0.8, 0.8, 0.8, 1); end
 			end
 			GameTooltip:Show();
+		elseif ( this:IsShown() ) then
+			GameTooltip:SetOwner(this, "ANCHOR_TOP");
+			GameTooltip:SetText("ASDrops", 1, 0.8, 0.2);
+			GameTooltip:AddLine("Preview: drops appear here during a run.", 0.9, 0.9, 0.9, 1);
+			GameTooltip:AddLine("Drag: move | Drag corner: resize | Right-click: lock/unlock", 0.6, 0.6, 0.6, 1);
+			GameTooltip:Show();
 		end
 	end);
 	button:SetScript("OnLeave", function() GameTooltip:Hide(); end);
@@ -386,11 +393,26 @@ local function ResolveItemTexture(item)
 	return item.icon;
 end
 
+-- Before the run clock passes one second (or exists at all) the bar shows placeholders.
+local function PreviewActive()
+	local runTime;
+	if ( type(AZS_GetRunTime) == "function" ) then runTime = AZS_GetRunTime(); end
+	if ( type(runTime) ~= "number" and type(AZS_RUN) == "table" ) then runTime = tonumber(AZS_RUN.t); end
+	return (type(runTime) ~= "number" or runTime < 1);
+end
+
+local previewShown = nil;
+
 local function RefreshBar()
 	-- Share the live row with companion modules even before SavedVariables are ready.
 	ASDropsLiveItems = items;
+	local preview = PreviewActive();
+	previewShown = preview;
 	local iconCount = table.getn(items);
+	local previewCount = 0;
+	if ( preview ) then previewCount = PREVIEW_ICONS; end
 	if ( table.getn(icons) > iconCount ) then iconCount = table.getn(icons); end
+	if ( previewCount > iconCount ) then iconCount = previewCount; end
 	for i = 1, iconCount do
 		local button = icons[i];
 		if ( not button ) then button = CreateIcon(i); icons[i] = button; end
@@ -399,6 +421,7 @@ local function RefreshBar()
 		button:ClearAllPoints();
 		button:SetPoint("LEFT", ASDropsBar, "LEFT", (i - 1) * (iconSize + ICON_GAP), 0);
 		local item = items[i];
+		if ( preview ) then item = nil; end
 		if ( item ) then
 			local texture = ResolveItemTexture(item);
 			button.texture:SetTexture(texture or "Interface\\Icons\\INV_Misc_QuestionMark");
@@ -407,11 +430,19 @@ local function RefreshBar()
 			if ( item.count > 1 ) then button.count:SetText(item.count); else button.count:SetText(""); end
 			if ( item.collection == "new" ) then button.newLabel:SetText("New"); else button.newLabel:SetText(""); end
 			button:Show();
+		elseif ( i <= previewCount ) then
+			-- Placeholder icons let players position the bar before a run starts.
+			button.texture:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark");
+			button.rarityBorder:SetBackdropBorderColor(0.62, 0.62, 0.62, 1);
+			button.count:SetText("");
+			button.newLabel:SetText("");
+			button:Show();
 		else
 			button:Hide();
 		end
 	end
 	local count = table.getn(items);
+	if ( preview ) then count = PREVIEW_ICONS; end
 	if ( count < 1 ) then count = 1; end
 	ASDropsBar:SetWidth(count * iconSize + (count - 1) * ICON_GAP);
 	ASDropsBar:SetHeight(iconSize);
@@ -937,6 +968,7 @@ updater:SetScript("OnUpdate", function()
 	HookDragonUIObserver();
 	ScanDragonUILoot();
 	CheckForNewRun();
+	if ( previewShown ~= PreviewActive() ) then RefreshBar(); end
 	iconRetryAge = iconRetryAge + (arg1 or 0);
 	if ( iconRetryAge >= 0.5 ) then
 		iconRetryAge = 0;
@@ -977,6 +1009,27 @@ SlashCmdList["ASDROPS"] = function(message)
 		if ( item.link ) then DEFAULT_CHAT_FRAME:AddMessage("   link=" .. tostring(item.link), 0.8, 0.8, 0.8); end
 		if ( item.bossName ) then DEFAULT_CHAT_FRAME:AddMessage("   boss=" .. tostring(item.bossName), 1, 0.8, 0.2); end
 		if ( item.lootMessage ) then DEFAULT_CHAT_FRAME:AddMessage("   loot chat=" .. tostring(item.lootMessage), 1, 0.6, 0.6); end
+	end
+	local runTime;
+	if ( type(AZS_GetRunTime) == "function" ) then runTime = AZS_GetRunTime(); end
+	local snapshotTime = type(AZS_RUN) == "table" and AZS_RUN.t or nil;
+	DEFAULT_CHAT_FRAME:AddMessage("ASDrops preview: active=" .. tostring(PreviewActive()) .. " shownState=" .. tostring(previewShown)
+		.. " runTime=" .. tostring(runTime) .. " AZS_RUN.t=" .. tostring(snapshotTime)
+		.. " phase=" .. tostring(type(AZS_GetPhase) == "function" and AZS_GetPhase() or nil), 0.7, 0.9, 1);
+	local screenWidth, screenHeight = UIParent:GetWidth(), UIParent:GetHeight();
+	local barLeft, barBottom = ASDropsBar:GetLeft(), ASDropsBar:GetBottom();
+	DEFAULT_CHAT_FRAME:AddMessage(string.format("   bar: shown=%s w=%s h=%s left=%s bottom=%s alpha=%s scale=%s screen=%dx%d",
+		tostring(ASDropsBar:IsShown()), tostring(ASDropsBar:GetWidth()), tostring(ASDropsBar:GetHeight()),
+		tostring(barLeft), tostring(barBottom), tostring(ASDropsBar:GetAlpha()), tostring(ASDropsBar:GetEffectiveScale()),
+		screenWidth, screenHeight), 1, 1, 1);
+	for i = 1, table.getn(icons) do
+		local button = icons[i];
+		local left, bottom = button:GetLeft(), button:GetBottom();
+		local onScreen = (left and bottom and left >= 0 and bottom >= 0
+			and left + button:GetWidth() <= screenWidth and bottom + button:GetHeight() <= screenHeight);
+		DEFAULT_CHAT_FRAME:AddMessage(string.format("   icon %d: shown=%s visible=%s size=%s left=%s bottom=%s onScreen=%s texture=%s",
+			i, tostring(button:IsShown()), tostring(button:IsVisible()), tostring(button:GetWidth()), tostring(left), tostring(bottom),
+			tostring(onScreen and true or false), tostring(button.texture:GetTexture())), 1, 1, 1);
 	end
 end;
 
