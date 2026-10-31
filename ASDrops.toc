@@ -1,7 +1,7 @@
 ## Interface: 11200
 ## Title: ASDrops
 ## Notes: Icon bar of loot received this Azeroth Survivors run (rarity colours, tooltips, boss-kill drops, new/collected status), a row of uncollected items from the current zone, and a visual-only backpack mirror.
-## Version: 1.0
+## Version: 1.1
 ## Author: Valorless
 ## SavedVariables: ASDropsDB, ASDropReminderDB, ASDropsZoneDB
 
