@@ -150,6 +150,7 @@ local function ItemIconByName(name)
 	if ( not name ) then return nil; end
 	local className = type(AZS_ZONE) == "table" and AZS_ZONE.class or nil;
 	if ( (not className or className == "") and type(ASDropsZoneDB) == "table" ) then className = ASDropsZoneDB.lastClass; end
+	if ( DFRL and DFRL.LootIconCatalog ) then
 		local catalogs = DFRL.LootIconCatalog;
 		local code = DFRL.locale and DFRL.locale.code;
 		local classes = catalogs.classes and (catalogs.classes[code] or catalogs.classes.en);
