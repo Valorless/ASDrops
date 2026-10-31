@@ -313,6 +313,24 @@ local function OnLootMessage(message)
 	RecordItem(currentZone, key, link, name, nil, RarityFromColor(color), false);
 end
 
+-- Anything offered in a loot window is known to drop here; it stays missing until looted.
+local function ScanLootWindow()
+	if ( not currentZone or type(GetNumLootItems) ~= "function" or type(GetLootSlotLink) ~= "function" ) then return; end
+	for slot = 1, GetNumLootItems() do
+		local link = GetLootSlotLink(slot);
+		local key = KeyFromLink(link);
+		if ( key ) then
+			local zoneItems = ZoneTable(currentZone, false);
+			if ( not (zoneItems and zoneItems[key]) ) then
+				local _, _, color = string.find(link, "^|c(%x%x%x%x%x%x%x%x)");
+				local texture;
+				if ( type(GetLootSlotInfo) == "function" ) then texture = GetLootSlotInfo(slot); end
+				RecordItem(currentZone, key, link, NameFromLink(link), texture, RarityFromColor(color), false);
+			end
+		end
+	end
+end
+
 local function FindEntry(text)
 	local zoneItems = ZoneTable(currentZone, false);
 	if ( not zoneItems or not text or text == "" ) then return nil, nil; end
@@ -392,8 +410,11 @@ events:RegisterEvent("VARIABLES_LOADED");
 events:RegisterEvent("PLAYER_ENTERING_WORLD");
 events:RegisterEvent("CHAT_MSG_ADDON");
 events:RegisterEvent("CHAT_MSG_LOOT");
+events:RegisterEvent("LOOT_OPENED");
 events:SetScript("OnEvent", function()
-	if ( event == "CHAT_MSG_LOOT" ) then
+	if ( event == "LOOT_OPENED" ) then
+		ScanLootWindow();
+	elseif ( event == "CHAT_MSG_LOOT" ) then
 		OnLootMessage(arg1);
 	elseif ( event == "CHAT_MSG_ADDON" ) then
 		if ( arg1 == "AZSZONE" ) then CheckZone(); end
