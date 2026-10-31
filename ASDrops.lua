@@ -387,12 +387,24 @@ local function ResolveItemTexture(item)
 	return item.icon;
 end
 
+-- Before the run clock passes one second (or exists at all) the bar shows placeholders.
+local function PreviewActive()
+	local runTime;
+	if ( type(AZS_GetRunTime) == "function" ) then runTime = AZS_GetRunTime(); end
+	if ( type(runTime) ~= "number" and type(AZS_RUN) == "table" ) then runTime = tonumber(AZS_RUN.t); end
+	return (type(runTime) ~= "number" or runTime < 1);
+end
+
+local previewShown = nil;
+
 local function RefreshBar()
 	-- Share the live row with companion modules even before SavedVariables are ready.
 	ASDropsLiveItems = items;
+	local preview = PreviewActive();
+	previewShown = preview;
 	local iconCount = table.getn(items);
 	local previewCount = 0;
-	if ( iconCount < 1 ) then previewCount = PREVIEW_ICONS; end
+	if ( preview ) then previewCount = PREVIEW_ICONS; end
 	if ( table.getn(icons) > iconCount ) then iconCount = table.getn(icons); end
 	for i = 1, iconCount do
 		local button = icons[i];
@@ -402,6 +414,7 @@ local function RefreshBar()
 		button:ClearAllPoints();
 		button:SetPoint("LEFT", ASDropsBar, "LEFT", (i - 1) * (iconSize + ICON_GAP), 0);
 		local item = items[i];
+		if ( preview ) then item = nil; end
 		if ( item ) then
 			local texture = ResolveItemTexture(item);
 			button.texture:SetTexture(texture or "Interface\\Icons\\INV_Misc_QuestionMark");
@@ -422,7 +435,8 @@ local function RefreshBar()
 		end
 	end
 	local count = table.getn(items);
-	if ( count < 1 ) then count = PREVIEW_ICONS; end
+	if ( preview ) then count = PREVIEW_ICONS; end
+	if ( count < 1 ) then count = 1; end
 	ASDropsBar:SetWidth(count * iconSize + (count - 1) * ICON_GAP);
 	ASDropsBar:SetHeight(iconSize);
 	if ( resizeHandle ) then resizeHandle:Raise(); end
@@ -947,6 +961,7 @@ updater:SetScript("OnUpdate", function()
 	HookDragonUIObserver();
 	ScanDragonUILoot();
 	CheckForNewRun();
+	if ( previewShown ~= PreviewActive() ) then RefreshBar(); end
 	iconRetryAge = iconRetryAge + (arg1 or 0);
 	if ( iconRetryAge >= 0.5 ) then
 		iconRetryAge = 0;
