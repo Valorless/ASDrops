@@ -265,7 +265,30 @@ local function ApplyPosition()
 	end
 end
 
+local resizeHandle;
+local resizing = false;
+local resizeStartX = 0;
+local resizeStartY = 0;
+local resizeStartSize = DEFAULT_SIZE;
+
+local function ToggleLock()
+	local db = EnsureDB();
+	db.locked = not db.locked;
+	if ( resizeHandle and resizeHandle.gripTextures ) then
+		for i = 1, table.getn(resizeHandle.gripTextures) do
+			if ( db.locked ) then resizeHandle.gripTextures[i]:Hide();
+			else resizeHandle.gripTextures[i]:Show(); end
+		end
+	end
+end
+
 local function CurrentIconSize()
+	local saved = tonumber(EnsureDB().iconSize);
+	if ( saved ) then
+		if ( saved < 24 ) then saved = 24; end
+		if ( saved > 80 ) then saved = 80; end
+		return saved;
+	end
 	if ( ASDropsBar and ASDropsBar.GetHeight ) then
 		local height = ASDropsBar:GetHeight();
 		if ( type(height) == "number" and height >= 16 ) then return height; end
@@ -292,13 +315,15 @@ local function CreateButton(index)
 	button:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 	button:EnableMouse(true);
 	button:SetScript("OnDragStart", function()
-		if ( IsShiftKeyDown() and not EnsureDB().locked ) then bar:StartMoving(); end
+		if ( not EnsureDB().locked ) then bar:StartMoving(); end
 	end);
 	button:SetScript("OnDragStop", function()
 		bar:StopMovingOrSizing();
 		SavePosition();
 	end);
 	button:SetScript("OnClick", function()
+		if ( arg1 == "RightButton" and not IsShiftKeyDown() ) then ToggleLock(); return; end
+		if ( not IsShiftKeyDown() ) then return; end
 		local item = shown[this:GetID()];
 		if ( not item ) then return; end
 		if ( arg1 == "RightButton" and not item.azl ) then
@@ -332,7 +357,7 @@ local function CreateButton(index)
 			end
 			if ( item.boss ) then GameTooltip:AddLine("Drops from: " .. item.boss, 1, 0.8, 0.2); end
 			GameTooltip:AddLine("Not yet collected", 1, 0.5, 0.5);
-			GameTooltip:AddLine("Click: mark collected | Shift-drag: move", 0.6, 0.6, 0.6);
+			GameTooltip:AddLine("Shift-click: mark collected | Drag: move | Right-click: lock", 0.6, 0.6, 0.6);
 			GameTooltip:Show();
 			return;
 		end
@@ -340,7 +365,7 @@ local function CreateButton(index)
 		else GameTooltip:SetText(item.name); end
 		GameTooltip:AddLine((item.rarity or "Unknown rarity") .. " - not yet collected", red, green, blue);
 		GameTooltip:AddLine("Seen in " .. (currentZoneName or "this zone") .. " x" .. (item.entry.seen or 1), 0.8, 0.8, 0.8);
-		GameTooltip:AddLine("Click: mark collected | Right-click: forget | Shift-drag: move", 0.6, 0.6, 0.6);
+		GameTooltip:AddLine("Shift-click: mark collected | Shift-right-click: forget | Drag: move | Right-click: lock", 0.6, 0.6, 0.6);
 		GameTooltip:Show();
 	end);
 	button:SetScript("OnLeave", function() GameTooltip:Hide(); end);
@@ -485,7 +510,7 @@ SlashCmdList["ASDROPSMISSING"] = function(message)
 	local db = EnsureDB();
 	CheckZone();
 	if ( command == "lock" ) then db.locked = true; Print("Row locked.");
-	elseif ( command == "unlock" ) then db.locked = false; Print("Row unlocked (Shift-drag an icon to move it).");
+	elseif ( command == "unlock" ) then db.locked = false; Print("Row unlocked (drag an icon to move it).");
 	elseif ( command == "show" ) then db.hidden = false; needsRefresh = true; Print("Row shown.");
 	elseif ( command == "hide" ) then db.hidden = true; needsRefresh = true; Print("Row hidden.");
 	elseif ( command == "list" ) then
@@ -533,6 +558,69 @@ label:SetPoint("BOTTOMLEFT", bar, "TOPLEFT", 0, 2);
 overflow = bar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
 overflow:SetPoint("LEFT", bar, "RIGHT", 4, 0);
 
+resizeHandle = CreateFrame("Button", nil, bar);
+resizeHandle:SetWidth(20);
+resizeHandle:SetHeight(20);
+resizeHandle:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", 0, 0);
+resizeHandle:SetFrameLevel(bar:GetFrameLevel() + 5);
+resizeHandle:SetFrameStrata("DIALOG");
+resizeHandle:EnableMouse(true);
+do
+	local arrowPoints = {
+		{ -5, 5 }, { -4, 4 }, { -3, 3 }, { -2, 2 }, { -1, 1 }, { 0, 0 },
+		{ 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 },
+		{ -3, 5 }, { -5, 3 }, { 3, -5 }, { 5, -3 },
+	};
+	resizeHandle.gripTextures = {};
+	for i = 1, table.getn(arrowPoints) do
+		local point = arrowPoints[i];
+		local shadow = resizeHandle:CreateTexture(nil, "OVERLAY");
+		shadow:SetWidth(3);
+		shadow:SetHeight(3);
+		shadow:SetPoint("CENTER", resizeHandle, "CENTER", point[1] + 1, point[2] - 1);
+		shadow:SetTexture("Interface\\Buttons\\WHITE8X8");
+		shadow:SetVertexColor(0, 0, 0);
+		table.insert(resizeHandle.gripTextures, shadow);
+		local mark = resizeHandle:CreateTexture(nil, "OVERLAY");
+		mark:SetWidth(2);
+		mark:SetHeight(2);
+		mark:SetPoint("CENTER", resizeHandle, "CENTER", point[1], point[2]);
+		mark:SetTexture("Interface\\Buttons\\WHITE8X8");
+		mark:SetVertexColor(1, 1, 1);
+		table.insert(resizeHandle.gripTextures, mark);
+	end
+end
+resizeHandle:RegisterForDrag("LeftButton");
+resizeHandle:RegisterForClicks("RightButtonUp");
+resizeHandle:SetScript("OnDragStart", function()
+	if ( EnsureDB().locked ) then return; end
+	resizing = true;
+	resizeStartX, resizeStartY = GetCursorPosition();
+	resizeStartSize = CurrentIconSize();
+end);
+resizeHandle:SetScript("OnDragStop", function()
+	resizing = false;
+	SavePosition();
+end);
+resizeHandle:SetScript("OnEnter", function()
+	GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT");
+	if ( EnsureDB().locked ) then GameTooltip:SetText("Right-click to unlock", 1, 1, 1);
+	else GameTooltip:SetText("Drag to resize; right-click to lock", 1, 1, 1); end
+	GameTooltip:Show();
+end);
+resizeHandle:SetScript("OnClick", function()
+	if ( arg1 == "RightButton" ) then ToggleLock(); end
+end);
+resizeHandle:SetScript("OnLeave", function() GameTooltip:Hide(); end);
+
+local function ApplyLockState()
+	local locked = EnsureDB().locked;
+	for i = 1, table.getn(resizeHandle.gripTextures) do
+		if ( locked ) then resizeHandle.gripTextures[i]:Hide();
+		else resizeHandle.gripTextures[i]:Show(); end
+	end
+end
+
 local events = CreateFrame("Frame");
 events:RegisterEvent("VARIABLES_LOADED");
 events:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -549,14 +637,29 @@ events:SetScript("OnEvent", function()
 	else
 		EnsureDB();
 		ApplyPosition();
+		ApplyLockState();
 		CheckZone();
 		needsRefresh = true;
 	end
 end);
 events:SetScript("OnUpdate", function()
+	if ( resizing ) then
+		local cursorX, cursorY = GetCursorPosition();
+		local scale = UIParent:GetScale();
+		if ( not scale or scale == 0 ) then scale = 1; end
+		local delta = ((cursorX - resizeStartX) - (cursorY - resizeStartY)) / (2 * scale);
+		local newSize = math.floor(resizeStartSize + delta + 0.5);
+		if ( newSize < 24 ) then newSize = 24; end
+		if ( newSize > 80 ) then newSize = 80; end
+		if ( newSize ~= EnsureDB().iconSize ) then
+			EnsureDB().iconSize = newSize;
+			RefreshRow();
+		end
+	end
 	pollElapsed = pollElapsed + arg1;
 	if ( pollElapsed < 0.5 ) then return; end
 	pollElapsed = 0;
+	ApplyLockState();
 	CheckZone();
 	PollLiveItems();
 	local azlList = AzerlootMissing();
