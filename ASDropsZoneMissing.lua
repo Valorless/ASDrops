@@ -209,12 +209,15 @@ local function SeedMissing()
 	local marks = type(db.marks) == "table" and db.marks[class] or {};
 	local list = {};
 	for i = 1, table.getn(names) do
-		local name = names[i];
-		if ( not owned[name] and not marks[name] ) then
+		local drop = names[i];
+		if ( type(drop) ~= "table" ) then drop = { name = drop }; end
+		local name = drop.name;
+		if ( name and not owned[name] and not marks[name] ) then
 			local icon = ASDROPS_LOOT_ICONS and ASDROPS_LOOT_ICONS[name];
-			local entry = { name = name, icon = icon, azl = true };
+			local entry = { name = name, icon = icon, rarity = drop.rarity };
 			ResolveEntry(entry);
-			table.insert(list, { key = name, name = name, rarity = entry.rarity, icon = entry.icon, azl = true });
+			table.insert(list, { key = name, name = name, rarity = entry.rarity, icon = entry.icon, azl = true,
+				slot = drop.slot, boss = drop.boss });
 		end
 	end
 	table.sort(list, SortMissing);
