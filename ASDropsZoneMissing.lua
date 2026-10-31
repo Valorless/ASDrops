@@ -18,6 +18,7 @@ local currentZoneName;
 local lastCounts = {};
 local pollElapsed = 0;
 local needsRefresh = true;
+local ReadClass;
 
 local function Print(text)
 	DEFAULT_CHAT_FRAME:AddMessage("ASDrops missing: " .. text, 0.7, 0.9, 1);
@@ -122,7 +123,17 @@ local function RecordItem(zone, key, link, name, icon, rarity, collected)
 	entry.name = name or entry.name;
 	entry.icon = icon or entry.icon;
 	entry.rarity = rarity or entry.rarity;
-	if ( collected ) then entry.collected = true; end
+	if ( collected ) then
+		entry.collected = true;
+		local class = ReadClass();
+		local db = EnsureDB();
+		local itemName = name or entry.name;
+		if ( class and itemName ) then
+			if ( type(db.owned) ~= "table" ) then db.owned = {}; end
+			if ( type(db.owned[class]) ~= "table" ) then db.owned[class] = {}; end
+			db.owned[class][itemName] = true;
+		end
+	end
 	ResolveEntry(entry);
 	needsRefresh = true;
 end
@@ -134,7 +145,7 @@ local function SortMissing(a, b)
 	return string.lower(a.name or "") < string.lower(b.name or "");
 end
 
-local function ReadClass()
+ReadClass = function()
 	local db = EnsureDB();
 	if ( type(AZS_ZONE) == "table" and AZS_ZONE.class and AZS_ZONE.class ~= "" ) then
 		db.lastClass = string.lower(AZS_ZONE.class);
@@ -185,9 +196,36 @@ local function AzerlootMissing()
 	return list;
 end
 
+-- Optional zone lists in ASDropsZoneData.lua (our own file, filled by us): [class][zone] = { "Item name", ... }.
+-- An item is missing until the player has been seen looting it (recorded by name in ASDropsZoneDB.owned).
+local function SeedMissing()
+	local data = ASDROPS_ZONE_DROPS;
+	local class = ReadClass();
+	if ( type(data) ~= "table" or not class or not currentZone ) then return nil; end
+	local names = type(data[class]) == "table" and data[class][currentZone];
+	if ( type(names) ~= "table" or table.getn(names) < 1 ) then return nil; end
+	local db = EnsureDB();
+	local owned = type(db.owned) == "table" and db.owned[class] or {};
+	local marks = type(db.marks) == "table" and db.marks[class] or {};
+	local list = {};
+	for i = 1, table.getn(names) do
+		local name = names[i];
+		if ( not owned[name] and not marks[name] ) then
+			local icon = ASDROPS_LOOT_ICONS and ASDROPS_LOOT_ICONS[name];
+			local entry = { name = name, icon = icon, azl = true };
+			ResolveEntry(entry);
+			table.insert(list, { key = name, name = name, rarity = entry.rarity, icon = entry.icon, azl = true });
+		end
+	end
+	table.sort(list, SortMissing);
+	return list;
+end
+
 local function BuildMissingList()
 	local fromAzerloot = AzerlootMissing();
 	if ( fromAzerloot ) then return fromAzerloot; end
+	local fromSeed = SeedMissing();
+	if ( fromSeed ) then return fromSeed; end
 	local list = {};
 	local zoneItems = ZoneTable(currentZone, false);
 	if ( not zoneItems ) then return list; end
