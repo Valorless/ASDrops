@@ -1,0 +1,90 @@
+name: Release on PR merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+# Serialize releases so version bumps on main never race each other.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PROJECT: ${{ github.event.repository.name }}
+      PR: ${{ github.event.pull_request.number }}
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Skip if this PR already has a release
+        id: guard
+        run: |
+          if git tag -l | grep -Eq "^v[0-9]+\.[0-9]+\.${PR}$"; then
+            echo "A release for PR #${PR} already exists; skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Bump TOC version by 0.1
+        id: ver
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          CURRENT=$(grep -m1 -iE '^## *Version:' "$PROJECT.toc" | sed -E 's/^## *Version: *//I' | tr -d '\r' | xargs)
+          MAJOR=${CURRENT%%.*}
+          MINOR=0
+          if [[ "$CURRENT" == *.* ]]; then MINOR=${CURRENT#*.}; fi
+          MAJOR=$((10#${MAJOR:-0}))
+          MINOR=$((10#${MINOR:-0} + 1))
+          if [ "$MINOR" -ge 10 ]; then MAJOR=$((MAJOR + 1)); MINOR=0; fi
+          NEW="${MAJOR}.${MINOR}"
+          TAG="v${NEW}.${PR}"
+          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+            echo "Tag ${TAG} already exists; aborting." >&2
+            exit 1
+          fi
+          sed -i -E "s/^(## *Version:).*/\1 ${NEW}/I" "$PROJECT.toc"
+          echo "Bumping ${CURRENT} -> ${NEW} (tag ${TAG})"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "zip=${PROJECT}-${TAG}.zip" >> "$GITHUB_OUTPUT"
+          echo "version=$NEW" >> "$GITHUB_OUTPUT"
+
+      - name: Commit version bump to main
+        id: bump
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$PROJECT.toc"
+          git commit -m "Bump version to ${{ steps.ver.outputs.version }} (PR #${PR})"
+          # Fails (and stops the release) if main is protected or has moved on.
+          git push origin HEAD:main
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Package addon
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          mkdir "$PROJECT"
+          cp ./*.lua ./*.toc "$PROJECT"/
+          zip -r "${{ steps.ver.outputs.zip }}" "$PROJECT"
+
+      - name: Create release
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          gh release create "${{ steps.ver.outputs.tag }}" "${{ steps.ver.outputs.zip }}" \
+            --repo "${{ github.repository }}" \
+            --target "${{ steps.bump.outputs.sha }}" \
+            --title "${PROJECT} ${{ steps.ver.outputs.tag }}" \
+            --generate-notes
