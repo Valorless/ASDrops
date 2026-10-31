@@ -4,6 +4,7 @@
 ## Version: 1.0
 ## Author: Valorless
 ## SavedVariables: ASDropsDB, ASDropReminderDB, ASDropsZoneDB
+## OptionalDeps: Azerloot
 
 ASDropsLootIcons.lua
 ASDrops.lua

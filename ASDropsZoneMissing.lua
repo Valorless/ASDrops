@@ -1,6 +1,7 @@
 -- Second icon row: items known to drop in the current zone that are not yet collected.
 -- Fully separate from ASDropsBar; it only reads ASDropsLiveItems and loot chat.
-local MAX_MISSING_ICONS = 20;
+local MAX_MISSING_ICONS = 30;
+local lastAzerlootCount = -2;
 local ICON_GAP = 4;
 local DEFAULT_SIZE = 28;
 local UNKNOWN_ICON = "Interface\\Icons\\INV_Misc_QuestionMark";
@@ -133,7 +134,60 @@ local function SortMissing(a, b)
 	return string.lower(a.name or "") < string.lower(b.name or "");
 end
 
+local function ReadClass()
+	local db = EnsureDB();
+	if ( type(AZS_ZONE) == "table" and AZS_ZONE.class and AZS_ZONE.class ~= "" ) then
+		db.lastClass = string.lower(AZS_ZONE.class);
+	end
+	if ( db.lastClass ) then return db.lastClass; end
+	if ( type(AzerlootDB) == "table" and AzerlootDB.lastClass ) then return AzerlootDB.lastClass; end
+	if ( type(UnitClass) == "function" ) then
+		local _, class = UnitClass("player");
+		if ( class ) then return string.lower(class); end
+	end
+	return nil;
+end
+
+-- Azerloot (installed separately) holds the full boss drop list; it is only read here, never copied.
+local function AzerlootMissing()
+	local data = Azerloot_Loot;
+	if ( type(data) ~= "table" or type(data.zones) ~= "table" or type(data.drops) ~= "table" or not currentZone ) then return nil; end
+	local class = ReadClass();
+	local classDrops = class and data.drops[class];
+	if ( type(classDrops) ~= "table" ) then return nil; end
+	local zoneIndex;
+	for i = 1, table.getn(data.zones) do
+		if ( data.zones[i].key == currentZone ) then zoneIndex = i; break; end
+	end
+	local zoneDrops = zoneIndex and classDrops[zoneIndex];
+	if ( type(zoneDrops) ~= "table" ) then return nil; end
+	local zoneData = data.zones[zoneIndex];
+	local collected = type(AzerlootDB) == "table" and type(AzerlootDB.collected) == "table" and AzerlootDB.collected[class] or {};
+	local db = EnsureDB();
+	local marks = type(db.marks) == "table" and db.marks[class] or {};
+	local list, seenNames = {}, {};
+	for bossIndex = 1, table.getn(zoneDrops) do
+		local boss = zoneData.bosses and zoneData.bosses[bossIndex];
+		local bossItems = zoneDrops[bossIndex];
+		for n = 1, table.getn(bossItems or {}) do
+			local drop = bossItems[n];
+			if ( drop.name and not seenNames[drop.name] ) then
+				seenNames[drop.name] = true;
+				if ( not collected[drop.name] and not marks[drop.name] ) then
+					table.insert(list, { key = drop.name, name = drop.name, rarity = drop.rarity or zoneData.rarity,
+						icon = drop.icon and ("Interface\\Icons\\" .. drop.icon) or nil, azl = true,
+						slot = drop.slot, bonus = drop.bonus, boss = boss and boss.name, chance = zoneData.chance });
+				end
+			end
+		end
+	end
+	table.sort(list, SortMissing);
+	return list;
+end
+
 local function BuildMissingList()
+	local fromAzerloot = AzerlootMissing();
+	if ( fromAzerloot ) then return fromAzerloot; end
 	local list = {};
 	local zoneItems = ZoneTable(currentZone, false);
 	if ( not zoneItems ) then return list; end
@@ -206,10 +260,17 @@ local function CreateButton(index)
 	button:SetScript("OnClick", function()
 		local item = shown[this:GetID()];
 		if ( not item ) then return; end
-		if ( arg1 == "RightButton" ) then
+		if ( arg1 == "RightButton" and not item.azl ) then
 			local zoneItems = ZoneTable(currentZone, false);
 			if ( zoneItems ) then zoneItems[item.key] = nil; end
 			Print("Removed " .. item.name .. " from this zone's list.");
+		elseif ( item.azl ) then
+			local db = EnsureDB();
+			local class = ReadClass();
+			if ( type(db.marks) ~= "table" ) then db.marks = {}; end
+			if ( type(db.marks[class]) ~= "table" ) then db.marks[class] = {}; end
+			db.marks[class][item.name] = true;
+			Print("Marked " .. item.name .. " as collected.");
 		else
 			item.entry.collected = true;
 			Print("Marked " .. item.name .. " as collected.");
@@ -221,9 +282,21 @@ local function CreateButton(index)
 		local item = shown[this:GetID()];
 		if ( not item ) then return; end
 		GameTooltip:SetOwner(this, "ANCHOR_TOP");
+		local red, green, blue = RarityColor(item.rarity);
+		if ( item.azl ) then
+			GameTooltip:SetText(item.name, red, green, blue);
+			GameTooltip:AddLine((item.rarity or "") .. (item.slot and (" " .. item.slot) or ""), red, green, blue);
+			if ( item.bonus ) then
+				for i = 1, table.getn(item.bonus) do GameTooltip:AddLine(item.bonus[i], 0.4, 1, 0.4); end
+			end
+			if ( item.boss ) then GameTooltip:AddLine("Drops from: " .. item.boss, 1, 0.8, 0.2); end
+			GameTooltip:AddLine("Not yet collected", 1, 0.5, 0.5);
+			GameTooltip:AddLine("Click: mark collected | Shift-drag: move", 0.6, 0.6, 0.6);
+			GameTooltip:Show();
+			return;
+		end
 		if ( item.link ) then GameTooltip:SetHyperlink(item.link);
 		else GameTooltip:SetText(item.name); end
-		local red, green, blue = RarityColor(item.rarity);
 		GameTooltip:AddLine((item.rarity or "Unknown rarity") .. " - not yet collected", red, green, blue);
 		GameTooltip:AddLine("Seen in " .. (currentZoneName or "this zone") .. " x" .. (item.entry.seen or 1), 0.8, 0.8, 0.8);
 		GameTooltip:AddLine("Click: mark collected | Right-click: forget | Shift-drag: move", 0.6, 0.6, 0.6);
@@ -445,5 +518,8 @@ events:SetScript("OnUpdate", function()
 	pollElapsed = 0;
 	CheckZone();
 	PollLiveItems();
+	local azlList = AzerlootMissing();
+	local azlCount = azlList and table.getn(azlList) or -1;
+	if ( azlCount ~= lastAzerlootCount ) then lastAzerlootCount = azlCount; needsRefresh = true; end
 	if ( needsRefresh or (bar:IsShown() and math.abs(bar:GetHeight() - CurrentIconSize()) > 0.5) ) then RefreshRow(); end
 end);
