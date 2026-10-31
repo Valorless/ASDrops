@@ -1003,5 +1003,26 @@ SlashCmdList["ASDROPS"] = function(message)
 		if ( item.bossName ) then DEFAULT_CHAT_FRAME:AddMessage("   boss=" .. tostring(item.bossName), 1, 0.8, 0.2); end
 		if ( item.lootMessage ) then DEFAULT_CHAT_FRAME:AddMessage("   loot chat=" .. tostring(item.lootMessage), 1, 0.6, 0.6); end
 	end
+	local runTime;
+	if ( type(AZS_GetRunTime) == "function" ) then runTime = AZS_GetRunTime(); end
+	local snapshotTime = type(AZS_RUN) == "table" and AZS_RUN.t or nil;
+	DEFAULT_CHAT_FRAME:AddMessage("ASDrops preview: active=" .. tostring(PreviewActive()) .. " shownState=" .. tostring(previewShown)
+		.. " runTime=" .. tostring(runTime) .. " AZS_RUN.t=" .. tostring(snapshotTime)
+		.. " phase=" .. tostring(type(AZS_GetPhase) == "function" and AZS_GetPhase() or nil), 0.7, 0.9, 1);
+	local screenWidth, screenHeight = UIParent:GetWidth(), UIParent:GetHeight();
+	local barLeft, barBottom = ASDropsBar:GetLeft(), ASDropsBar:GetBottom();
+	DEFAULT_CHAT_FRAME:AddMessage(string.format("   bar: shown=%s w=%s h=%s left=%s bottom=%s alpha=%s scale=%s screen=%dx%d",
+		tostring(ASDropsBar:IsShown()), tostring(ASDropsBar:GetWidth()), tostring(ASDropsBar:GetHeight()),
+		tostring(barLeft), tostring(barBottom), tostring(ASDropsBar:GetAlpha()), tostring(ASDropsBar:GetEffectiveScale()),
+		screenWidth, screenHeight), 1, 1, 1);
+	for i = 1, table.getn(icons) do
+		local button = icons[i];
+		local left, bottom = button:GetLeft(), button:GetBottom();
+		local onScreen = (left and bottom and left >= 0 and bottom >= 0
+			and left + button:GetWidth() <= screenWidth and bottom + button:GetHeight() <= screenHeight);
+		DEFAULT_CHAT_FRAME:AddMessage(string.format("   icon %d: shown=%s visible=%s size=%s left=%s bottom=%s onScreen=%s texture=%s",
+			i, tostring(button:IsShown()), tostring(button:IsVisible()), tostring(button:GetWidth()), tostring(left), tostring(bottom),
+			tostring(onScreen and true or false), tostring(button.texture:GetTexture())), 1, 1, 1);
+	end
 end;
 
