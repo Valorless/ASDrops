@@ -3,10 +3,11 @@
 ## Notes: Tracks drops received during the current run
 ## Version: 1.0
 ## Author: Valorless
-## SavedVariables: ASDropsDB, ASDropReminderDB
+## SavedVariables: ASDropsDB, ASDropReminderDB, ASDropsZoneDB
 
 ASDropsLootIcons.lua
 ASDrops.lua
 ASDropsBagMirror.lua
+ASDropsZoneMissing.lua
 
 
