@@ -1,6 +1,7 @@
 local BAR_NAME = "ASDropsBar";
 local iconSize = 36;
 local ICON_GAP = 4;
+local PREVIEW_ICONS = 3;
 local MAX_LOOT_ITEMS = 20;
 local BOSS_LOOT_WINDOW = 12;
 local NO_LOOT_ICON = "Interface\\Icons\\INV_Stone_12";
@@ -390,6 +391,8 @@ local function RefreshBar()
 	-- Share the live row with companion modules even before SavedVariables are ready.
 	ASDropsLiveItems = items;
 	local iconCount = table.getn(items);
+	local previewCount = 0;
+	if ( iconCount < 1 ) then previewCount = PREVIEW_ICONS; end
 	if ( table.getn(icons) > iconCount ) then iconCount = table.getn(icons); end
 	for i = 1, iconCount do
 		local button = icons[i];
@@ -407,12 +410,19 @@ local function RefreshBar()
 			if ( item.count > 1 ) then button.count:SetText(item.count); else button.count:SetText(""); end
 			if ( item.collection == "new" ) then button.newLabel:SetText("New"); else button.newLabel:SetText(""); end
 			button:Show();
+		elseif ( i <= previewCount ) then
+			-- Placeholder icons let players position the bar before a run starts.
+			button.texture:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark");
+			button.rarityBorder:SetBackdropBorderColor(0.62, 0.62, 0.62, 1);
+			button.count:SetText("");
+			button.newLabel:SetText("");
+			button:Show();
 		else
 			button:Hide();
 		end
 	end
 	local count = table.getn(items);
-	if ( count < 1 ) then count = 1; end
+	if ( count < 1 ) then count = PREVIEW_ICONS; end
 	ASDropsBar:SetWidth(count * iconSize + (count - 1) * ICON_GAP);
 	ASDropsBar:SetHeight(iconSize);
 	if ( resizeHandle ) then resizeHandle:Raise(); end
