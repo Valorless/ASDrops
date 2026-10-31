@@ -196,6 +196,16 @@ local function AzerlootMissing()
 	return list;
 end
 
+-- Class-specific icon variants (same item name, different art per class) take priority over the flat table.
+local function ClassIcon(class, name)
+	local byClass = ASDROPS_LOOT_ICON_CLASSES;
+	if ( class and type(byClass) == "table" and type(byClass[class]) == "table" and byClass[class][name] ) then
+		return byClass[class][name];
+	end
+	if ( ASDROPS_LOOT_ICONS ) then return ASDROPS_LOOT_ICONS[name]; end
+	return nil;
+end
+
 local function NormalizeName(name)
 	if ( type(name) ~= "string" ) then return nil; end
 	name = string.gsub(name, "^%[(.*)%]$", "%1");
@@ -230,7 +240,7 @@ local function SeedMissing()
 		if ( type(drop) ~= "table" ) then drop = { name = drop }; end
 		local name = drop.name;
 		if ( name and not NameInSet(owned, name) and not NameInSet(marks, name) ) then
-			local icon = ASDROPS_LOOT_ICONS and ASDROPS_LOOT_ICONS[name];
+			local icon = ClassIcon(class, name);
 			local entry = { name = name, icon = icon, rarity = drop.rarity };
 			ResolveEntry(entry);
 			table.insert(list, { key = name, name = name, rarity = entry.rarity, icon = entry.icon, azl = true,
