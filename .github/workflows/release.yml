@@ -58,7 +58,7 @@ jobs:
           sed -i -E "s/^(## *Version:).*/\1 ${NEW}/I" "$PROJECT.toc"
           echo "Bumping ${CURRENT} -> ${NEW} (tag ${TAG})"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "zip=${PROJECT}-${TAG}.zip" >> "$GITHUB_OUTPUT"
+          echo "zip=${PROJECT}.zip" >> "$GITHUB_OUTPUT"
           echo "version=$NEW" >> "$GITHUB_OUTPUT"
 
       - name: Commit version bump to main
@@ -79,6 +79,20 @@ jobs:
           mkdir "$PROJECT"
           cp ./*.lua ./*.toc "$PROJECT"/
           zip -r "${{ steps.ver.outputs.zip }}" "$PROJECT"
+
+      - name: Verify zip layout
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          ZIP="${{ steps.ver.outputs.zip }}"
+          TOP=$(unzip -Z1 "$ZIP" | cut -d/ -f1 | sort -u)
+          if [ "$TOP" != "$PROJECT" ]; then
+            echo "Unexpected top-level entries in $ZIP: $TOP" >&2
+            exit 1
+          fi
+          if ! unzip -Z1 "$ZIP" | grep -qx "$PROJECT/$PROJECT.toc"; then
+            echo "$PROJECT/$PROJECT.toc missing from $ZIP" >&2
+            exit 1
+          fi
 
       - name: Create release
         if: steps.guard.outputs.skip == 'false'
