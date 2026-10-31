@@ -339,6 +339,12 @@ local function CreateIcon(index)
 				if ( item.bossText and item.bossText ~= "" ) then GameTooltip:AddLine(item.bossText, 0.8, 0.8, 0.8, 1); end
 			end
 			GameTooltip:Show();
+		elseif ( this:IsShown() ) then
+			GameTooltip:SetOwner(this, "ANCHOR_TOP");
+			GameTooltip:SetText("ASDrops", 1, 0.8, 0.2);
+			GameTooltip:AddLine("Preview: drops appear here during a run.", 0.9, 0.9, 0.9, 1);
+			GameTooltip:AddLine("Drag: move | Drag corner: resize | Right-click: lock/unlock", 0.6, 0.6, 0.6, 1);
+			GameTooltip:Show();
 		end
 	end);
 	button:SetScript("OnLeave", function() GameTooltip:Hide(); end);
