@@ -149,6 +149,7 @@ end
 local function ItemIconByName(name)
 	if ( not name ) then return nil; end
 	local className = type(AZS_ZONE) == "table" and AZS_ZONE.class or nil;
+	if ( (not className or className == "") and type(ASDropsZoneDB) == "table" ) then className = ASDropsZoneDB.lastClass; end
 	if ( DFRL and DFRL.LootIconCatalog ) then
 		local catalogs = DFRL.LootIconCatalog;
 		local code = DFRL.locale and DFRL.locale.code;
@@ -165,6 +166,12 @@ local function ItemIconByName(name)
 	if ( type(classIcon) == "string" ) then return classIcon; end
 	if ( ASDROPS_LOOT_ICONS and type(ASDROPS_LOOT_ICONS[name]) == "string" ) then
 		return ASDROPS_LOOT_ICONS[name];
+	end
+	-- Class still unknown (for example right after a reload): any class's art beats a blank icon.
+	if ( type(ASDROPS_LOOT_ICON_CLASSES) == "table" ) then
+		for _, classTable in pairs(ASDROPS_LOOT_ICON_CLASSES) do
+			if ( type(classTable) == "table" and type(classTable[name]) == "string" ) then return classTable[name]; end
+		end
 	end
 	return nil;
 end

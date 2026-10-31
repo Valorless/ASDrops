@@ -196,6 +196,33 @@ local function AzerlootMissing()
 	return list;
 end
 
+-- Class-specific icon variants (same item name, different art per class) take priority over the flat table.
+local function ClassIcon(class, name)
+	local byClass = ASDROPS_LOOT_ICON_CLASSES;
+	if ( class and type(byClass) == "table" and type(byClass[class]) == "table" and byClass[class][name] ) then
+		return byClass[class][name];
+	end
+	if ( ASDROPS_LOOT_ICONS ) then return ASDROPS_LOOT_ICONS[name]; end
+	return nil;
+end
+
+local function NormalizeName(name)
+	if ( type(name) ~= "string" ) then return nil; end
+	name = string.gsub(name, "^%[(.*)%]$", "%1");
+	return string.lower(name);
+end
+
+-- Compare names ignoring case and surrounding brackets; raw names stay valid for older saved data.
+local function NameInSet(set, name)
+	if ( type(set) ~= "table" or not name ) then return false; end
+	if ( set[name] ) then return true; end
+	local wanted = NormalizeName(name);
+	for stored in pairs(set) do
+		if ( NormalizeName(stored) == wanted ) then return true; end
+	end
+	return false;
+end
+
 -- Optional zone lists in ASDropsZoneData.lua (our own file, filled by us): [class][zone] = { "Item name", ... }.
 -- An item is missing until the player has been seen looting it (recorded by name in ASDropsZoneDB.owned).
 local function SeedMissing()
@@ -212,8 +239,8 @@ local function SeedMissing()
 		local drop = names[i];
 		if ( type(drop) ~= "table" ) then drop = { name = drop }; end
 		local name = drop.name;
-		if ( name and not owned[name] and not marks[name] ) then
-			local icon = ASDROPS_LOOT_ICONS and ASDROPS_LOOT_ICONS[name];
+		if ( name and not NameInSet(owned, name) and not NameInSet(marks, name) ) then
+			local icon = ClassIcon(class, name);
 			local entry = { name = name, icon = icon, rarity = drop.rarity };
 			ResolveEntry(entry);
 			table.insert(list, { key = name, name = name, rarity = entry.rarity, icon = entry.icon, azl = true,
@@ -427,6 +454,28 @@ local function CheckZone()
 	end
 end
 
+-- Anything on the main bar is collected: flag the zone entry by item id and remember its name for this class.
+local function MarkCollected(key, link, name)
+	if ( not key ) then return; end
+	local db = EnsureDB();
+	if ( not name ) then name = NameFromLink(link); end
+	if ( not name and string.find(key, "^%d+$") and type(GetItemInfo) == "function" ) then
+		local ok, itemName = pcall(GetItemInfo, "item:" .. key);
+		if ( ok and itemName and itemName ~= "" ) then name = itemName; end
+	end
+	local changed = false;
+	local zoneItems = ZoneTable(currentZone, false);
+	local entry = zoneItems and zoneItems[key];
+	if ( entry and not entry.collected ) then entry.collected = true; changed = true; end
+	local class = ReadClass();
+	if ( class and name ) then
+		if ( type(db.owned) ~= "table" ) then db.owned = {}; end
+		if ( type(db.owned[class]) ~= "table" ) then db.owned[class] = {}; end
+		if ( not db.owned[class][name] ) then db.owned[class][name] = true; changed = true; end
+	end
+	if ( changed ) then needsRefresh = true; end
+end
+
 -- Items on the main bar were looted by the player, so they count as collected.
 local function PollLiveItems()
 	local live = ASDropsLiveItems;
@@ -439,6 +488,7 @@ local function PollLiveItems()
 			local count = tonumber(item.count) or 1;
 			counts[key] = count;
 			local previous = lastCounts[key];
+			MarkCollected(key, item.link, item.name);
 			if ( currentZone and (not previous or count > previous) and string.find(key, "^%d+$") ) then
 				local zoneItems = ZoneTable(currentZone, false);
 				local known = zoneItems and zoneItems[key];
