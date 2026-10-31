@@ -4,6 +4,7 @@ local MAX_MISSING_ICONS = 20;
 local ICON_GAP = 4;
 local DEFAULT_SIZE = 28;
 local UNKNOWN_ICON = "Interface\\Icons\\INV_Misc_QuestionMark";
+local NO_ITEMS_ICON = "Interface\\Icons\\INV_Stone_12";
 local RARITY_ORDER = { Heirloom = 8, Artifact = 7, Legendary = 6, Epic = 5, Rare = 4, Uncommon = 3, Common = 2, Poor = 1 };
 
 local bar;
@@ -82,8 +83,14 @@ local function NameFromLink(link)
 end
 
 local function ReadZone()
-	if ( type(AZS_ZONE) ~= "table" or not AZS_ZONE.zone or AZS_ZONE.zone == "" ) then return nil, nil; end
-	return AZS_ZONE.zone, AZS_ZONE.zname or AZS_ZONE.zone;
+	local db = EnsureDB();
+	if ( type(AZS_ZONE) == "table" and AZS_ZONE.zone and AZS_ZONE.zone ~= "" ) then
+		db.lastZone = AZS_ZONE.zone;
+		db.lastZoneName = AZS_ZONE.zname or AZS_ZONE.zone;
+		return db.lastZone, db.lastZoneName;
+	end
+	-- AZS_ZONE is empty after a reload until the next run starts; reuse the last known zone.
+	return db.lastZone, db.lastZoneName;
 end
 
 -- Fill in anything GetItemInfo can tell us; safe to call repeatedly as the cache fills.
@@ -232,7 +239,7 @@ local function RefreshRow()
 	local db = EnsureDB();
 	local list = BuildMissingList();
 	local total = table.getn(list);
-	if ( not currentZone or db.hidden or total < 1 ) then
+	if ( db.hidden ) then
 		shown = {};
 		for i = 1, table.getn(buttons) do buttons[i]:Hide(); end
 		bar:Hide();
@@ -241,8 +248,10 @@ local function RefreshRow()
 	local size = CurrentIconSize();
 	local count = total;
 	if ( count > MAX_MISSING_ICONS ) then count = MAX_MISSING_ICONS; end
+	local slots = count;
+	if ( slots < 1 ) then slots = 1; end
 	shown = {};
-	for i = 1, count do
+	for i = 1, slots do
 		local button = buttons[i];
 		if ( not button ) then button = CreateButton(i); buttons[i] = button; end
 		local item = list[i];
@@ -251,15 +260,20 @@ local function RefreshRow()
 		button:SetHeight(size);
 		button:ClearAllPoints();
 		button:SetPoint("LEFT", bar, "LEFT", (i - 1) * (size + ICON_GAP), 0);
-		button.texture:SetTexture(item.icon or UNKNOWN_ICON);
-		local red, green, blue = RarityColor(item.rarity or "Common");
-		button.rarityBorder:SetBackdropBorderColor(red, green, blue, 1);
+		if ( item ) then
+			button.texture:SetTexture(item.icon or UNKNOWN_ICON);
+			local red, green, blue = RarityColor(item.rarity or "Common");
+			button.rarityBorder:SetBackdropBorderColor(red, green, blue, 1);
+		else
+			button.texture:SetTexture(NO_ITEMS_ICON);
+			button.rarityBorder:SetBackdropBorderColor(0.62, 0.62, 0.62, 1);
+		end
 		button:Show();
 	end
-	for i = count + 1, table.getn(buttons) do buttons[i]:Hide(); end
-	bar:SetWidth(count * size + (count - 1) * ICON_GAP);
+	for i = slots + 1, table.getn(buttons) do buttons[i]:Hide(); end
+	bar:SetWidth(slots * size + (slots - 1) * ICON_GAP);
 	bar:SetHeight(size);
-	label:SetText("Missing in " .. (currentZoneName or "zone") .. " (" .. total .. ")");
+	label:SetText("Missing in " .. (currentZoneName or "this zone") .. " (" .. total .. ")");
 	if ( total > count ) then overflow:SetText("+" .. (total - count)); else overflow:SetText(""); end
 	bar:Show();
 end
