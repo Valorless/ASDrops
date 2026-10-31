@@ -1,0 +1,12 @@
+## Interface: 11200
+## Title: ASDrops
+## Notes: Tracks drops received during the current run
+## Version: 1.0
+## Author: Valorless
+## SavedVariables: ASDropsDB, ASDropReminderDB
+
+ASDropsLootIcons.lua
+ASDrops.lua
+ASDropsBagMirror.lua
+
+
