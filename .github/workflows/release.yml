@@ -45,12 +45,12 @@ jobs:
           CURRENT=$(grep -m1 -iE '^## *Version:' "$PROJECT.toc" | sed -E 's/^## *Version: *//I' | tr -d '\r' | xargs)
           MAJOR=${CURRENT%%.*}
           MINOR=0
-          if [[ "$CURRENT" == *.* ]]; then MINOR=${CURRENT#*.}; fi
+          if [[ "$CURRENT" == *.* ]]; then REST=${CURRENT#*.}; MINOR=${REST%%.*}; fi
           MAJOR=$((10#${MAJOR:-0}))
           MINOR=$((10#${MINOR:-0} + 1))
           if [ "$MINOR" -ge 10 ]; then MAJOR=$((MAJOR + 1)); MINOR=0; fi
-          NEW="${MAJOR}.${MINOR}"
-          TAG="v${NEW}.${PR}"
+          NEW="${MAJOR}.${MINOR}.${PR}"
+          TAG="v${NEW}"
           if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
             echo "Tag ${TAG} already exists; aborting." >&2
             exit 1
