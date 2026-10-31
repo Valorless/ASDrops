@@ -406,6 +406,7 @@ local function RefreshBar()
 	local previewCount = 0;
 	if ( preview ) then previewCount = PREVIEW_ICONS; end
 	if ( table.getn(icons) > iconCount ) then iconCount = table.getn(icons); end
+	if ( previewCount > iconCount ) then iconCount = previewCount; end
 	for i = 1, iconCount do
 		local button = icons[i];
 		if ( not button ) then button = CreateIcon(i); icons[i] = button; end
