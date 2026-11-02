@@ -1,7 +1,6 @@
 -- Visual-only copies of tracked loot in the backpack's display slots.
 -- This does not create or change real inventory items.
 local mirrorByButton = {};
-local mirrorCount = 0;
 local updateElapsed = 0;
 local mirroredItems = 0;
 local foundSlots = 0;
@@ -32,9 +31,7 @@ local function GetMirror(button)
 	mirror.icon = button:CreateTexture(nil, "OVERLAY");
 	mirror.icon:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2);
 	mirror.icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2);
-	mirrorCount = mirrorCount + 1;
-	mirror.border = CreateFrame("Frame", "ASDropsMirrorBorder" .. mirrorCount, button);
-	ASDropsKeepOnTop(mirror.border);
+	mirror.border = CreateFrame("Frame", nil, button);
 	mirror.border:SetAllPoints(button);
 	mirror.border:SetFrameLevel(button:GetFrameLevel() + 6);
 	mirror.border:EnableMouse(false);
@@ -43,8 +40,7 @@ local function GetMirror(button)
 		edgeSize = 9,
 		insets = { left = 2, right = 2, top = 2, bottom = 2 },
 	});
-	mirror.tooltip = CreateFrame("Button", "ASDropsMirrorTooltip" .. mirrorCount, button);
-	ASDropsKeepOnTop(mirror.tooltip);
+	mirror.tooltip = CreateFrame("Button", nil, button);
 	mirror.tooltip:SetAllPoints(button);
 	mirror.tooltip:SetFrameLevel(button:GetFrameLevel() + 7);
 	mirror.tooltip:EnableMouse(true);
@@ -141,8 +137,7 @@ SlashCmdList["ASDROPSBAG"] = function(message)
 	end
 end;
 
-local updater = CreateFrame("Frame", "ASDropsMirrorUpdater");
-ASDropsKeepOnTop(updater);
+local updater = CreateFrame("Frame");
 updater:RegisterEvent("VARIABLES_LOADED");
 updater:RegisterEvent("PLAYER_ENTERING_WORLD");
 updater:RegisterEvent("BAG_UPDATE");
