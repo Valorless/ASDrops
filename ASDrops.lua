@@ -263,12 +263,14 @@ ToggleLock = function()
 end
 
 local function CreateIcon(index)
-	local button = CreateFrame("Button", nil, ASDropsBar);
+	local button = CreateFrame("Button", "ASDropsIcon" .. index, ASDropsBar);
+	ASDropsKeepOnTop(button);
 	button:SetWidth(iconSize);
 	button:SetHeight(iconSize);
 	button:SetID(index);
 	button:SetPoint("LEFT", ASDropsBar, "LEFT", (index - 1) * (iconSize + ICON_GAP), 0);
-	button.rarityBorder = CreateFrame("Frame", nil, button);
+	button.rarityBorder = CreateFrame("Frame", "ASDropsIconBorder" .. index, button);
+	ASDropsKeepOnTop(button.rarityBorder);
 	button.rarityBorder:SetAllPoints(button);
 	button.rarityBorder:SetFrameLevel(button:GetFrameLevel() + 1);
 	button.rarityBorder:EnableMouse(false);
@@ -413,6 +415,9 @@ local previewShown = nil;
 local function RefreshBar()
 	-- Share the live row with companion modules even before SavedVariables are ready.
 	ASDropsLiveItems = items;
+	if ( ASDropsBar ) then
+		if ( ASDropsDB and ASDropsDB.barHidden ) then ASDropsBar:Hide(); else ASDropsBar:Show(); end
+	end
 	local preview = PreviewActive();
 	previewShown = preview;
 	local iconCount = table.getn(items);
@@ -455,6 +460,11 @@ local function RefreshBar()
 	ASDropsBar:SetHeight(iconSize);
 	if ( resizeHandle ) then resizeHandle:Raise(); end
 	SaveItems();
+end
+
+-- Used by the settings window after the loot bar is shown or hidden.
+function ASDropsRefreshBar()
+	RefreshBar();
 end
 
 local function ResetItems()
@@ -863,6 +873,7 @@ local function RetryItemIcons()
 end
 
 local root = CreateFrame("Frame", "ASDropsRoot", UIParent);
+ASDropsKeepOnTop(root);
 root:RegisterEvent("VARIABLES_LOADED");
 root:RegisterEvent("PLAYER_ENTERING_WORLD");
 root:RegisterEvent("CHAT_MSG_LOOT");
@@ -876,6 +887,7 @@ root:SetScript("OnEvent", function()
 		if ( iconSize < 24 ) then iconSize = 24; end
 		if ( iconSize > 80 ) then iconSize = 80; end
 		local bar = CreateFrame("Frame", BAR_NAME, UIParent);
+		ASDropsKeepOnTop(bar);
 		bar:SetWidth(iconSize);
 		bar:SetHeight(iconSize);
 		bar:SetFrameStrata("HIGH");
@@ -891,7 +903,8 @@ root:SetScript("OnEvent", function()
 			ASDropsDB.relativePoint or "CENTER", ASDropsDB.x or 0, ASDropsDB.y or -120);
 		KeepBarOnScreen();
 		bar:SetScript("OnUpdate", function() KeepBarOnScreen(); end);
-		resizeHandle = CreateFrame("Button", nil, bar);
+		resizeHandle = CreateFrame("Button", "ASDropsResizeHandle", bar);
+		ASDropsKeepOnTop(resizeHandle);
 		resizeHandle:SetWidth(20);
 		resizeHandle:SetHeight(20);
 		resizeHandle:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", 0, 0);
@@ -968,7 +981,8 @@ root:SetScript("OnEvent", function()
 	end
 end);
 
-local updater = CreateFrame("Frame");
+local updater = CreateFrame("Frame", "ASDropsUpdater");
+ASDropsKeepOnTop(updater);
 local iconRetryAge = 0;
 updater:SetScript("OnUpdate", function()
 	CheckPendingBossDowns();
@@ -1001,8 +1015,12 @@ end);
 SLASH_ASDROPS1 = "/asdrops";
 SlashCmdList["ASDROPS"] = function(message)
 	local command = string.lower(message or "");
+	if ( command == "" or command == "settings" or command == "options" or command == "config" ) then
+		ASDropsToggleSettings();
+		return;
+	end
 	if ( command ~= "debug" ) then
-		DEFAULT_CHAT_FRAME:AddMessage("ASDrops: use /asdrops debug to inspect recorded drops.", 1, 0.8, 0.2);
+		DEFAULT_CHAT_FRAME:AddMessage("ASDrops: /asdrops opens the settings; /asdrops debug inspects recorded drops.", 1, 0.8, 0.2);
 		return;
 	end
 	local count = table.getn(items);
