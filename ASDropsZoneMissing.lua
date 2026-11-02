@@ -455,9 +455,13 @@ local function RefreshRow()
 		local grey = item and item.done and db.greyCollected;
 		if ( button.texture.SetDesaturated ) then
 			button.texture:SetDesaturated(grey and 1 or 0);
-			if ( not grey ) then button.texture:SetVertexColor(1, 1, 1); end
+		end
+		if ( grey ) then
+			-- Dim the icon as well, so collected items stand out less even where SetDesaturated is missing.
+			if ( button.texture.SetDesaturated ) then button.texture:SetVertexColor(0.5, 0.5, 0.5);
+			else button.texture:SetVertexColor(0.3, 0.3, 0.3); end
 		else
-			if ( grey ) then button.texture:SetVertexColor(0.4, 0.4, 0.4); else button.texture:SetVertexColor(1, 1, 1); end
+			button.texture:SetVertexColor(1, 1, 1);
 		end
 		if ( item and item.done and db.checkCollected ) then button.check:Show(); else button.check:Hide(); end
 		button:Show();

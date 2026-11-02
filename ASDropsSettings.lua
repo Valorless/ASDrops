@@ -173,7 +173,7 @@ local function CreateMinimapButton()
 	icon:SetWidth(20);
 	icon:SetHeight(20);
 	icon:SetPoint("CENTER", mmButton, "CENTER", 0, 1);
-	icon:SetTexture("Interface\\Icons\\INV_Misc_Bag_08");
+	icon:SetTexture("Interface\\Icons\\INV_Misc_Bag_11");
 	local border = mmButton:CreateTexture(nil, "OVERLAY");
 	border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder");
 	border:SetWidth(53);
