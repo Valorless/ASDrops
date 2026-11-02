@@ -415,6 +415,9 @@ local previewShown = nil;
 local function RefreshBar()
 	-- Share the live row with companion modules even before SavedVariables are ready.
 	ASDropsLiveItems = items;
+	if ( ASDropsBar ) then
+		if ( ASDropsDB and ASDropsDB.barHidden ) then ASDropsBar:Hide(); else ASDropsBar:Show(); end
+	end
 	local preview = PreviewActive();
 	previewShown = preview;
 	local iconCount = table.getn(items);
@@ -457,6 +460,11 @@ local function RefreshBar()
 	ASDropsBar:SetHeight(iconSize);
 	if ( resizeHandle ) then resizeHandle:Raise(); end
 	SaveItems();
+end
+
+-- Used by the settings window after the loot bar is shown or hidden.
+function ASDropsRefreshBar()
+	RefreshBar();
 end
 
 local function ResetItems()
@@ -1007,8 +1015,12 @@ end);
 SLASH_ASDROPS1 = "/asdrops";
 SlashCmdList["ASDROPS"] = function(message)
 	local command = string.lower(message or "");
+	if ( command == "" or command == "settings" or command == "options" or command == "config" ) then
+		ASDropsToggleSettings();
+		return;
+	end
 	if ( command ~= "debug" ) then
-		DEFAULT_CHAT_FRAME:AddMessage("ASDrops: use /asdrops debug to inspect recorded drops.", 1, 0.8, 0.2);
+		DEFAULT_CHAT_FRAME:AddMessage("ASDrops: /asdrops opens the settings; /asdrops debug inspects recorded drops.", 1, 0.8, 0.2);
 		return;
 	end
 	local count = table.getn(items);

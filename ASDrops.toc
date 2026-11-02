@@ -10,5 +10,6 @@ ASDropsZoneData.lua
 ASDrops.lua
 ASDropsBagMirror.lua
 ASDropsZoneMissing.lua
+ASDropsSettings.lua
 
 

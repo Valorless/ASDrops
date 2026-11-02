@@ -9,6 +9,7 @@ An **Azeroth Survivors** addon that shows an icon bar of the loot you receive du
 - **Boss-kill drops** – boss kills are recorded on the bar. If a boss dropped nothing, a *A Pretty Rock* icon is shown, with the boss name in its tooltip.
 - **Missing items row** – above the bar, a "Missing in <zone>" row lists items known to drop in the current zone that you haven't collected yet. It is filled from loot you see in loot windows and chat, saved per zone, and can optionally be seeded from `ASDropsZoneData.lua`.
 - **Backpack mirror** – the loot bar items are also drawn, visual only, in the display slots of your backpack. Nothing is added to or changed in your real inventory.
+- **Settings window** – a minimap button (drag it round the minimap; its position is saved) or `/asdrops` opens a settings window. Toggle either row on or off, and, for the missing row, optionally *Show collected items* (listed after the missing ones), *Greyscale collected items* and *Green checkmark on collected items*. The collected options are off by default, apply immediately, are saved, and the greyscale/checkmark boxes only apply (and are only enabled) while *Show collected items* is on.
 - **Stays on top** – the loot bar, missing row and item tooltip stay visible and clickable over the level-up and jewelry cards, using `AZS_SetOnTopOfScreens` when the game provides it. The backpack mirror is left alone, since the bag itself stays under the cards.
 - **Movable and resizable** – both rows can be dragged, resized and locked; position and size are saved.
 
@@ -66,13 +67,14 @@ Commands are purely optional.
 | `/asmissing reset` | Clears the current zone's list. |
 | `/asmissing lock` / `unlock` | Locks or unlocks moving of the missing row. |
 | `/asmissing show` / `hide` | Shows or hides the missing row. |
+| `/asdrops` (or `/asdrops settings`) | Opens or closes the settings window. |
 | `/asdrops debug` | Prints the recorded drops and the bar state to the chat frame. |
 | `/asdropsbag debug` | Prints the backpack mirror status (items mirrored, bag slots found, copies shown). |
 
 ## Saved Variables
 
-- `ASDropsDB` – loot bar items, position and size (`ASDropReminderDB` is read as a fallback for older saves, or reloads).
-- `ASDropsZoneDB` – the per-zone missing lists and the missing row's settings.
+- `ASDropsDB` – loot bar items, position and size, whether the loot bar is hidden, and the minimap button's angle (`ASDropReminderDB` is read as a fallback for older saves, or reloads).
+- `ASDropsZoneDB` – the per-zone missing lists and the missing row's settings (hidden, show/greyscale/checkmark for collected items).
 
 ## Releases
 

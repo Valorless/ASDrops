@@ -139,6 +139,7 @@ local function RecordItem(zone, key, link, name, icon, rarity, collected)
 end
 
 local function SortMissing(a, b)
+	if ( (a.done and true or false) ~= (b.done and true or false) ) then return not a.done; end
 	local orderA = RARITY_ORDER[a.rarity or "Common"] or 2;
 	local orderB = RARITY_ORDER[b.rarity or "Common"] or 2;
 	if ( orderA ~= orderB ) then return orderA > orderB; end
@@ -184,9 +185,10 @@ local function AzerlootMissing()
 			local drop = bossItems[n];
 			if ( drop.name and not seenNames[drop.name] ) then
 				seenNames[drop.name] = true;
-				if ( not collected[drop.name] and not marks[drop.name] ) then
+				local isDone = (collected[drop.name] or marks[drop.name]) and true or false;
+				if ( not isDone or db.showCollected ) then
 					table.insert(list, { key = drop.name, name = drop.name, rarity = drop.rarity or zoneData.rarity,
-						icon = drop.icon and ("Interface\\Icons\\" .. drop.icon) or nil, azl = true,
+						icon = drop.icon and ("Interface\\Icons\\" .. drop.icon) or nil, azl = true, done = isDone,
 						slot = drop.slot, bonus = drop.bonus, boss = boss and boss.name, chance = zoneData.chance });
 				end
 			end
@@ -239,11 +241,12 @@ local function SeedMissing()
 		local drop = names[i];
 		if ( type(drop) ~= "table" ) then drop = { name = drop }; end
 		local name = drop.name;
-		if ( name and not NameInSet(owned, name) and not NameInSet(marks, name) ) then
+		local isDone = (NameInSet(owned, name) or NameInSet(marks, name)) and true or false;
+		if ( name and (not isDone or db.showCollected) ) then
 			local icon = ClassIcon(class, name);
 			local entry = { name = name, icon = icon, rarity = drop.rarity };
 			ResolveEntry(entry);
-			table.insert(list, { key = name, name = name, rarity = entry.rarity, icon = entry.icon, azl = true,
+			table.insert(list, { key = name, name = name, rarity = entry.rarity, icon = entry.icon, azl = true, done = isDone,
 				slot = drop.slot, boss = drop.boss });
 		end
 	end
@@ -257,12 +260,13 @@ local function BuildMissingList()
 	local fromSeed = SeedMissing();
 	if ( fromSeed ) then return fromSeed; end
 	local list = {};
+	local db = EnsureDB();
 	local zoneItems = ZoneTable(currentZone, false);
 	if ( not zoneItems ) then return list; end
 	for key, entry in pairs(zoneItems) do
-		if ( not entry.collected ) then
+		if ( not entry.collected or db.showCollected ) then
 			ResolveEntry(entry);
-			table.insert(list, { key = key, name = entry.name or ("item:" .. key),
+			table.insert(list, { key = key, name = entry.name or ("item:" .. key), done = entry.collected and true or false,
 				rarity = entry.rarity, icon = entry.icon, link = entry.link, entry = entry });
 		end
 	end
@@ -340,6 +344,12 @@ local function CreateButton(index)
 	button.texture = button:CreateTexture(nil, "ARTWORK");
 	button.texture:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2);
 	button.texture:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2);
+	button.check = button:CreateTexture(nil, "OVERLAY");
+	button.check:SetTexture("Interface\\Buttons\\UI-CheckBox-Check");
+	button.check:SetVertexColor(0.1, 1, 0.1);
+	button.check:SetPoint("TOPLEFT", button, "CENTER", -2, 2);
+	button.check:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 3, -3);
+	button.check:Hide();
 	button:RegisterForDrag("LeftButton");
 	button:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 	button:EnableMouse(true);
@@ -385,14 +395,15 @@ local function CreateButton(index)
 				for i = 1, table.getn(item.bonus) do GameTooltip:AddLine(item.bonus[i], 0.4, 1, 0.4); end
 			end
 			if ( item.boss ) then GameTooltip:AddLine("Drops from: " .. item.boss, 1, 0.8, 0.2); end
-			GameTooltip:AddLine("Not yet collected", 1, 0.5, 0.5);
+			if ( item.done ) then GameTooltip:AddLine("Collected", 0.4, 1, 0.4);
+			else GameTooltip:AddLine("Not yet collected", 1, 0.5, 0.5); end
 			GameTooltip:AddLine("Shift-click: mark collected | Drag: move | Right-click: lock", 0.6, 0.6, 0.6);
 			GameTooltip:Show();
 			return;
 		end
 		if ( item.link ) then GameTooltip:SetHyperlink(item.link);
 		else GameTooltip:SetText(item.name); end
-		GameTooltip:AddLine((item.rarity or "Unknown rarity") .. " - not yet collected", red, green, blue);
+		GameTooltip:AddLine((item.rarity or "Unknown rarity") .. (item.done and " - collected" or " - not yet collected"), red, green, blue);
 		GameTooltip:AddLine("Seen in " .. (currentZoneName or "this zone") .. " x" .. (item.entry.seen or 1), 0.8, 0.8, 0.8);
 		GameTooltip:AddLine("Shift-click: mark collected | Shift-right-click: forget | Drag: move | Right-click: lock", 0.6, 0.6, 0.6);
 		GameTooltip:Show();
@@ -407,6 +418,10 @@ local function RefreshRow()
 	local db = EnsureDB();
 	local list = BuildMissingList();
 	local total = table.getn(list);
+	local missing = 0;
+	for i = 1, total do
+		if ( not list[i].done ) then missing = missing + 1; end
+	end
 	if ( db.hidden ) then
 		shown = {};
 		for i = 1, table.getn(buttons) do buttons[i]:Hide(); end
@@ -436,14 +451,28 @@ local function RefreshRow()
 			button.texture:SetTexture(NO_ITEMS_ICON);
 			button.rarityBorder:SetBackdropBorderColor(0.62, 0.62, 0.62, 1);
 		end
+		local grey = item and item.done and db.greyCollected;
+		if ( button.texture.SetDesaturated ) then
+			button.texture:SetDesaturated(grey and 1 or 0);
+			if ( not grey ) then button.texture:SetVertexColor(1, 1, 1); end
+		else
+			if ( grey ) then button.texture:SetVertexColor(0.4, 0.4, 0.4); else button.texture:SetVertexColor(1, 1, 1); end
+		end
+		if ( item and item.done and db.checkCollected ) then button.check:Show(); else button.check:Hide(); end
 		button:Show();
 	end
 	for i = slots + 1, table.getn(buttons) do buttons[i]:Hide(); end
 	bar:SetWidth(slots * size + (slots - 1) * ICON_GAP);
 	bar:SetHeight(size);
-	label:SetText("Missing in " .. (currentZoneName or "this zone") .. " (" .. total .. ")");
+	label:SetText("Missing in " .. (currentZoneName or "this zone") .. " (" .. missing .. ")");
 	if ( total > count ) then overflow:SetText("+" .. (total - count)); else overflow:SetText(""); end
 	bar:Show();
+end
+
+-- Used by the settings window after a row option changes.
+function ASDropsRefreshMissing()
+	needsRefresh = true;
+	RefreshRow();
 end
 
 local function CheckZone()
@@ -575,7 +604,9 @@ SlashCmdList["ASDROPSMISSING"] = function(message)
 		end
 		Print(currentZoneName .. ": " .. total .. " known, " .. got .. " collected, " .. (total - got) .. " missing.");
 		local list = BuildMissingList();
-		for i = 1, table.getn(list) do Print("  " .. (list[i].link or list[i].name)); end
+		for i = 1, table.getn(list) do
+			if ( not list[i].done ) then Print("  " .. (list[i].link or list[i].name)); end
+		end
 	elseif ( command == "reset" ) then
 		if ( currentZone ) then db.zones[currentZone] = nil; needsRefresh = true; Print("Cleared the list for " .. currentZoneName .. "."); end
 	elseif ( command == "add" ) then
