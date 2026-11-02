@@ -345,7 +345,7 @@ local function CreateButton(index)
 	button.texture = button:CreateTexture(nil, "ARTWORK");
 	button.texture:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2);
 	button.texture:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2);
-	button.dim = button:CreateTexture(nil, "OVERLAY");
+	button.dim = button:CreateTexture(nil, "ARTWORK");
 	button.dim:SetTexture("Interface\\Buttons\\WHITE8X8");
 	button.dim:SetVertexColor(0, 0, 0, 0.55);
 	button.dim:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2);
