@@ -139,8 +139,8 @@ local function RecordItem(zone, key, link, name, icon, rarity, collected)
 end
 
 local function SortMissing(a, b)
-	if ( (a.done and true or false) ~= (b.done and true or false) ) then return not a.done; end
 	if ( a.order and b.order and a.order ~= b.order ) then return a.order < b.order; end
+	if ( (a.done and true or false) ~= (b.done and true or false) ) then return not a.done; end
 	local orderA = RARITY_ORDER[a.rarity or "Common"] or 2;
 	local orderB = RARITY_ORDER[b.rarity or "Common"] or 2;
 	if ( orderA ~= orderB ) then return orderA > orderB; end

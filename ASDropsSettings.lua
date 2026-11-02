@@ -26,7 +26,7 @@ local OPTIONS = {
 		get = function() return not ZoneDB().hidden; end,
 		set = function(on) ZoneDB().hidden = (not on) and true or false; if ( ASDropsRefreshMissing ) then ASDropsRefreshMissing(); end end },
 	{ key = "showCollected", label = "Show collected items", gap = true,
-		tip = "Also list the zone's items you have already collected in the missing-items row, after the missing ones.",
+		tip = "Also list the zone's items you have already collected in the missing-items row, in boss order.",
 		get = function() return ZoneDB().showCollected and true or false; end,
 		set = function(on) ZoneDB().showCollected = on and true or false; if ( ASDropsRefreshMissing ) then ASDropsRefreshMissing(); end end },
 	{ key = "greyCollected", label = "Greyscale collected items", needsCollected = true,
