@@ -140,6 +140,7 @@ end
 
 local function SortMissing(a, b)
 	if ( (a.done and true or false) ~= (b.done and true or false) ) then return not a.done; end
+	if ( a.order and b.order and a.order ~= b.order ) then return a.order < b.order; end
 	local orderA = RARITY_ORDER[a.rarity or "Common"] or 2;
 	local orderB = RARITY_ORDER[b.rarity or "Common"] or 2;
 	if ( orderA ~= orderB ) then return orderA > orderB; end
@@ -188,7 +189,7 @@ local function AzerlootMissing()
 				local isDone = (collected[drop.name] or marks[drop.name]) and true or false;
 				if ( not isDone or db.showCollected ) then
 					table.insert(list, { key = drop.name, name = drop.name, rarity = drop.rarity or zoneData.rarity,
-						icon = drop.icon and ("Interface\\Icons\\" .. drop.icon) or nil, azl = true, done = isDone,
+						icon = drop.icon and ("Interface\\Icons\\" .. drop.icon) or nil, azl = true, done = isDone, order = bossIndex * 1000 + n,
 						slot = drop.slot, bonus = drop.bonus, boss = boss and boss.name, chance = zoneData.chance });
 				end
 			end
@@ -246,7 +247,7 @@ local function SeedMissing()
 			local icon = ClassIcon(class, name);
 			local entry = { name = name, icon = icon, rarity = drop.rarity };
 			ResolveEntry(entry);
-			table.insert(list, { key = name, name = name, rarity = entry.rarity, icon = entry.icon, azl = true, done = isDone,
+			table.insert(list, { key = name, name = name, rarity = entry.rarity, icon = entry.icon, azl = true, done = isDone, order = i,
 				slot = drop.slot, boss = drop.boss });
 		end
 	end
