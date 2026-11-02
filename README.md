@@ -9,6 +9,7 @@ An **Azeroth Survivors** addon that shows an icon bar of the loot you receive du
 - **Boss-kill drops** – boss kills are recorded on the bar. If a boss dropped nothing, a *A Pretty Rock* icon is shown, with the boss name in its tooltip.
 - **Missing items row** – above the bar, a "Missing in <zone>" row lists items known to drop in the current zone that you haven't collected yet. It is filled from loot you see in loot windows and chat, saved per zone, and can optionally be seeded from `ASDropsZoneData.lua`.
 - **Backpack mirror** – the loot bar items are also drawn, visual only, in the display slots of your backpack. Nothing is added to or changed in your real inventory.
+- **Stays on top** – all ASDrops frames (and the item tooltip) stay visible and clickable over the level-up and jewelry cards, using `AZS_SetOnTopOfScreens` when the game provides it.
 - **Movable and resizable** – both rows can be dragged, resized and locked; position and size are saved.
 
 ## Screenshots
@@ -81,6 +82,8 @@ Releases are published automatically on GitHub Releases whenever a pull request 
 
 ASDrops listens to the loot chat messages and to the Azeroth Survivors boss-kill banners, and records each drop with its rarity, type and new/collected status on the main bar. The current zone and class are read from Azeroth Survivors; every item seen dropping in a zone is remembered for it, and stays in the missing row until you loot it. The backpack mirror simply draws copies of the bar's icons over the backpack's slots, without touching real inventory.
 Drops are also listened to through SDUI's loot frame, if available.
+
+**Developer note:** every new frame must have a global name and call `ASDropsKeepOnTop(frame)` right after `CreateFrame` (defined in `ASDropsLootIcons.lua`, which loads first). It safely does nothing on game versions without `AZS_SetOnTopOfScreens`.
 
 ## AI Usage
 

@@ -324,9 +324,11 @@ local function CurrentIconSize()
 end
 
 local function CreateButton(index)
-	local button = CreateFrame("Button", nil, bar);
+	local button = CreateFrame("Button", "ASDropsMissingIcon" .. index, bar);
+	ASDropsKeepOnTop(button);
 	button:SetID(index);
-	button.rarityBorder = CreateFrame("Frame", nil, button);
+	button.rarityBorder = CreateFrame("Frame", "ASDropsMissingIconBorder" .. index, button);
+	ASDropsKeepOnTop(button.rarityBorder);
 	button.rarityBorder:SetAllPoints(button);
 	button.rarityBorder:SetFrameLevel(button:GetFrameLevel() + 1);
 	button.rarityBorder:EnableMouse(false);
@@ -598,6 +600,7 @@ SlashCmdList["ASDROPSMISSING"] = function(message)
 end;
 
 bar = CreateFrame("Frame", "ASDropsMissingBar", UIParent);
+ASDropsKeepOnTop(bar);
 bar:SetWidth(DEFAULT_SIZE);
 bar:SetHeight(DEFAULT_SIZE);
 bar:SetMovable(true);
@@ -608,7 +611,8 @@ label:SetPoint("BOTTOMLEFT", bar, "TOPLEFT", 0, 2);
 overflow = bar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
 overflow:SetPoint("LEFT", bar, "RIGHT", 4, 0);
 
-resizeHandle = CreateFrame("Button", nil, bar);
+resizeHandle = CreateFrame("Button", "ASDropsMissingResizeHandle", bar);
+ASDropsKeepOnTop(resizeHandle);
 resizeHandle:SetWidth(20);
 resizeHandle:SetHeight(20);
 resizeHandle:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", 0, 0);
@@ -671,7 +675,8 @@ local function ApplyLockState()
 	end
 end
 
-local events = CreateFrame("Frame");
+local events = CreateFrame("Frame", "ASDropsMissingEvents");
+ASDropsKeepOnTop(events);
 events:RegisterEvent("VARIABLES_LOADED");
 events:RegisterEvent("PLAYER_ENTERING_WORLD");
 events:RegisterEvent("CHAT_MSG_ADDON");
