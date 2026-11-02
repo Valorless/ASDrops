@@ -345,13 +345,19 @@ local function CreateButton(index)
 	button.texture = button:CreateTexture(nil, "ARTWORK");
 	button.texture:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2);
 	button.texture:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2);
-	button.dim = button:CreateTexture(nil, "ARTWORK");
+	button.dim = button:CreateTexture(nil, "OVERLAY");
 	button.dim:SetTexture("Interface\\Buttons\\WHITE8X8");
 	button.dim:SetVertexColor(0, 0, 0, 0.55);
 	button.dim:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2);
 	button.dim:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2);
 	button.dim:Hide();
-	button.check = button:CreateTexture(nil, "OVERLAY");
+	-- A child frame sits above the button's own textures, so the check stays over the dimming.
+	local checkFrame = CreateFrame("Frame", "ASDropsMissingIconCheck" .. index, button);
+	ASDropsKeepOnTop(checkFrame);
+	checkFrame:SetAllPoints(button);
+	checkFrame:SetFrameLevel(button:GetFrameLevel() + 2);
+	checkFrame:EnableMouse(false);
+	button.check = checkFrame:CreateTexture(nil, "OVERLAY");
 	button.check:SetTexture("Interface\\Buttons\\UI-CheckBox-Check");
 	button.check:SetVertexColor(0.1, 1, 0.1);
 	button.check:SetPoint("TOPLEFT", button, "CENTER", -2, 2);
