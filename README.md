@@ -7,7 +7,7 @@ An **Azeroth Survivors** addon that shows an icon bar of the loot you receive du
 - **Loot bar** – every item you receive during the current run appears as an icon (up to 20), with a rarity-coloured border, a stack count and a tooltip showing rarity and item type.
 - **New / already collected** – the "New in your collection!" and "already collected" loot messages are picked up and shown on the icon.
 - **Boss-kill drops** – boss kills are recorded on the bar. If a boss dropped nothing, a *A Pretty Rock* icon is shown, with the boss name in its tooltip.
-- **Missing items row** – below the bar, a "Missing in <zone>" row lists items known to drop in the current zone that you haven't collected yet (up to 30 icons). It is filled from loot you see in loot windows and chat, saved per zone, and can optionally be seeded from `ASDropsZoneData.lua`.
+- **Missing items row** – above the bar, a "Missing in <zone>" row lists items known to drop in the current zone that you haven't collected yet. It is filled from loot you see in loot windows and chat, saved per zone, and can optionally be seeded from `ASDropsZoneData.lua`.
 - **Backpack mirror** – the loot bar items are also drawn, visual only, in the display slots of your backpack. Nothing is added to or changed in your real inventory.
 - **Movable and resizable** – both rows can be dragged, resized and locked; position and size are saved.
 
@@ -16,6 +16,8 @@ An **Azeroth Survivors** addon that shows an icon bar of the loot you receive du
 **Loot bar and missing items row** – two boss kills without drops (*A Pretty Rock*), a new item on the top row, and the uncollected items of Warsong Gulch below.
 
 ![ASDrops loot bar and missing items row](.media/asdrops.png)
+![ASDrops tooltip](.media/tooltip.png)
+
 
 ## Installation
 
@@ -40,12 +42,18 @@ An **Azeroth Survivors** addon that shows an icon bar of the loot you receive du
 
 ## Known Quirks
 
-- The backpack mirror only appears once the backpack has been opened, as its slots are created then. It uses the backpack's display slots only (`ContainerFrame1`).
-- The loot bar holds at most 20 entries and the missing row shows at most 30 icons; further missing items are summarised next to the row.
-- Items you didn't see drop (never in a loot window or chat) are not known to the missing row; add them with `/asmissing add`, or through `ASDropsZoneData.lua`.
+- Since ASDrops cannot interact with your collection, the addon won't know what you've already collected.
+  - You can either manually mark this in-run, or re-collect the items for ASDrops to register.
 - Loot detection relies on the loot chat messages, so replacements for the default chat or loot UI may behave differently.
+  - Can also interact with SDUI's loot frame to instantly get what item dropped.
+ 
+## Planned Features
+
+- Azerloot integration, to show extra item information in each item's tooltip.
 
 ## Commands
+
+Commands are purely optional.
 
 | Command | Description |
 | --- | --- |
@@ -62,7 +70,7 @@ An **Azeroth Survivors** addon that shows an icon bar of the loot you receive du
 
 ## Saved Variables
 
-- `ASDropsDB` – loot bar items, position and size (`ASDropReminderDB` is read as a fallback for older saves).
+- `ASDropsDB` – loot bar items, position and size (`ASDropReminderDB` is read as a fallback for older saves, or reloads).
 - `ASDropsZoneDB` – the per-zone missing lists and the missing row's settings.
 
 ## Releases
@@ -72,6 +80,7 @@ Releases are published automatically on GitHub Releases whenever a pull request 
 ## How it works, quick TLDR
 
 ASDrops listens to the loot chat messages and to the Azeroth Survivors boss-kill banners, and records each drop with its rarity, type and new/collected status on the main bar. The current zone and class are read from Azeroth Survivors; every item seen dropping in a zone is remembered for it, and stays in the missing row until you loot it. The backpack mirror simply draws copies of the bar's icons over the backpack's slots, without touching real inventory.
+Drops are also listened to through SDUI's loot frame, if available.
 
 ## AI Usage
 
