@@ -345,6 +345,12 @@ local function CreateButton(index)
 	button.texture = button:CreateTexture(nil, "ARTWORK");
 	button.texture:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2);
 	button.texture:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2);
+	button.dim = button:CreateTexture(nil, "OVERLAY");
+	button.dim:SetTexture("Interface\\Buttons\\WHITE8X8");
+	button.dim:SetVertexColor(0, 0, 0, 0.55);
+	button.dim:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2);
+	button.dim:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2);
+	button.dim:Hide();
 	button.check = button:CreateTexture(nil, "OVERLAY");
 	button.check:SetTexture("Interface\\Buttons\\UI-CheckBox-Check");
 	button.check:SetVertexColor(0.1, 1, 0.1);
@@ -456,12 +462,13 @@ local function RefreshRow()
 		if ( button.texture.SetDesaturated ) then
 			button.texture:SetDesaturated(grey and 1 or 0);
 		end
+		-- A dark overlay dims the icon even where vertex colours don't affect a desaturated texture.
 		if ( grey ) then
-			-- Dim the icon as well, so collected items stand out less even where SetDesaturated is missing.
-			if ( button.texture.SetDesaturated ) then button.texture:SetVertexColor(0.5, 0.5, 0.5);
-			else button.texture:SetVertexColor(0.3, 0.3, 0.3); end
+			if ( not button.texture.SetDesaturated ) then button.texture:SetVertexColor(0.5, 0.5, 0.5); end
+			button.dim:Show();
 		else
 			button.texture:SetVertexColor(1, 1, 1);
+			button.dim:Hide();
 		end
 		if ( item and item.done and db.checkCollected ) then button.check:Show(); else button.check:Hide(); end
 		button:Show();

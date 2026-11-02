@@ -72,7 +72,7 @@ local function CreateCheckbox(option, index, y)
 	end);
 	box:SetScript("OnEnter", function()
 		GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-		GameTooltip:SetText(this.option.label, 1, 1, 1);
+		GameTooltip:SetText(this.option.label, 1, 0.82, 0);
 		GameTooltip:AddLine(this.option.tip, 0.9, 0.9, 0.9, 1);
 		GameTooltip:Show();
 	end);
