@@ -877,6 +877,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
+		scholo = {
+			{ name = "Feralheart Cowl", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Feralheart Spaulders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Feralheart Vest", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Feralheart Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Feralheart Kilt", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Feralheart Boots", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Feralheart Bracers", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Feralheart Gloves", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Warden Staff", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Dreamwalker Cover", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Dreamwalker Spaulders", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
