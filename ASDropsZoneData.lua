@@ -683,6 +683,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
+		scholo = {
+			{ name = "Sorcerer's Crown", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Sorcerer's Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Sorcerer's Robes", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Sorcerer's Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Sorcerer's Leggings", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Sorcerer's Boots", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Sorcerer's Bindings", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Sorcerer's Gloves", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Rod of the Ogre Magi", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Frostfire Circlet", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Frostfire Mantle", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
