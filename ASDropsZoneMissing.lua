@@ -498,6 +498,7 @@ local function CheckZone()
 	currentZoneName = zoneName;
 	if ( zone ~= currentZone ) then
 		currentZone = zone;
+		if ( zone ) then DEFAULT_CHAT_FRAME:AddMessage("ASDrops debug: zone key = " .. tostring(zone) .. " (" .. tostring(zoneName) .. ")"); end
 		lastCounts = {};
 		needsRefresh = true;
 	end
