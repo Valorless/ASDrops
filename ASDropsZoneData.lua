@@ -476,6 +476,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
+		scholo = {
+			{ name = "Virtuous Crown", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Virtuous Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Virtuous Robe", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Virtuous Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Virtuous Skirt", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Virtuous Sandals", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Virtuous Bracers", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Virtuous Gloves", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Staff of Metanoia", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Circlet of Faith", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Mantle of Faith", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
