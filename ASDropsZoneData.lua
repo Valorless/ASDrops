@@ -1,7 +1,7 @@
 -- Zone drop lists for the "still missing" row, written and maintained for ASDrops itself.
 -- Format: ASDROPS_ZONE_DROPS[class key][zone key] = { { name = "Item", boss = "Boss", slot = "Slot", rarity = "Rarity" }, ... }
 -- Class keys: warrior, paladin, hunter, rogue, priest, shaman, mage, warlock, druid.
--- Zone keys: elwynn, duskwood, wsg, ungoro, ab, feralas, arena, sm, av, brm, aq, naxx.
+-- Zone keys: elwynn, duskwood, wsg, ungoro, ab, feralas, arena, sm, av, brm, scholo, aq, naxx.
 -- Names are the English item names. PvP zone drops use the Epic colour.
 ASDROPS_ZONE_DROPS = {
 	warrior = {
@@ -74,6 +74,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Bracers", boss = "Emperor Dagran Thaurissan", slot = "Wrist", rarity = "Epic" },
 			{ name = "Field Marshal's Gauntlets", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Claymore", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
+		},
+		scholo = {
+			{ name = "Helm of Heroism", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Spaulders of Heroism", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Breastplate of Heroism", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Belt of Heroism", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Legplates of Heroism", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Boots of Heroism", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Bracers of Heroism", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Gauntlets of Heroism", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Demonshear", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
 		},
 		aq = {
 			{ name = "Dreadnaught Helm", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },

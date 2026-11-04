@@ -1115,6 +1115,7 @@ since the one before, that the game applies whole and in order (asking the serve
 | `sm` | Scarlet Monastery |
 | `av` | Alterac Valley |
 | `brm` | Blackrock Mountain |
+| `scholo` | Scholomance |
 | `aq` | Gates of Ahn'Qiraj |
 | `naxx` | Naxxramas |
 
