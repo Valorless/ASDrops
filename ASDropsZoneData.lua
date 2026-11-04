@@ -269,6 +269,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gauntlets", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Bullseye", boss = "Nefarian", slot = "Ranged", rarity = "Epic" },
 		},
+		scholo = {
+			{ name = "Beastmaster's Cap", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Beastmaster's Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Beastmaster's Tunic", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Beastmaster's Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Beastmaster's Pants", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Beastmaster's Boots", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Beastmaster's Bindings", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Beastmaster's Gloves", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Ancient Bone Bow", boss = "Darkmaster Gandling", slot = "Ranged", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Cryptstalker Helm", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Cryptstalker Spaulders", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
