@@ -583,6 +583,18 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "High Warlord's Battle Mace", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 			{ name = "High Warlord's Shield Wall", boss = "Nefarian", slot = "Off Hand", rarity = "Epic" },
 		},
+		scholo = {
+			{ name = "Coif of The Five Thunders", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Pauldrons of The Five Thunders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Vest of The Five Thunders", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Cord of The Five Thunders", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Kilt of The Five Thunders", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Boots of The Five Thunders", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Bindings of The Five Thunders", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Gauntlets of The Five Thunders", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Hand of Edward the Odd", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+			{ name = "Crest of Retribution", boss = "Darkmaster Gandling", slot = "Off Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Earthshatter Helm", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Earthshatter Spaulders", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
