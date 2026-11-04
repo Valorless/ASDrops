@@ -1,7 +1,7 @@
 -- Zone drop lists for the "still missing" row, written and maintained for ASDrops itself.
 -- Format: ASDROPS_ZONE_DROPS[class key][zone key] = { { name = "Item", boss = "Boss", slot = "Slot", rarity = "Rarity" }, ... }
 -- Class keys: warrior, paladin, hunter, rogue, priest, shaman, mage, warlock, druid.
--- Zone keys: elwynn, duskwood, wsg, ungoro, ab, feralas, arena, sm, av, brm, aq, naxx.
+-- Zone keys: elwynn, duskwood, wsg, ungoro, ab, feralas, arena, sm, av, brm, scholomance, aq, naxx.
 -- Names are the English item names. PvP zone drops use the Epic colour.
 ASDROPS_ZONE_DROPS = {
 	warrior = {
@@ -74,6 +74,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Bracers", boss = "Emperor Dagran Thaurissan", slot = "Wrist", rarity = "Epic" },
 			{ name = "Field Marshal's Gauntlets", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Claymore", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
+		},
+		scholomance = {
+			{ name = "Helm of Heroism", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Spaulders of Heroism", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Breastplate of Heroism", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Belt of Heroism", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Legplates of Heroism", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Boots of Heroism", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Bracers of Heroism", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Gauntlets of Heroism", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Demonshear", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
 		},
 		aq = {
 			{ name = "Dreadnaught Helm", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
@@ -161,6 +172,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gauntlets", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Demolisher", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
+		scholomance = {
+			{ name = "Soulforge Helm", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Soulforge Spaulders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Soulforge Breastplate", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Soulforge Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Soulforge Legplates", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Soulforge Boots", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Soulforge Bracers", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Soulforge Gauntlets", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Hammer of the Grand Crusader", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Redemption Helm", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Redemption Pauldrons", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
@@ -246,6 +268,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Bracers", boss = "Emperor Dagran Thaurissan", slot = "Wrist", rarity = "Epic" },
 			{ name = "Field Marshal's Gauntlets", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Bullseye", boss = "Nefarian", slot = "Ranged", rarity = "Epic" },
+		},
+		scholomance = {
+			{ name = "Beastmaster's Cap", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Beastmaster's Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Beastmaster's Tunic", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Beastmaster's Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Beastmaster's Pants", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Beastmaster's Boots", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Beastmaster's Bindings", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Beastmaster's Gloves", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Ancient Bone Bow", boss = "Darkmaster Gandling", slot = "Ranged", rarity = "Epic" },
 		},
 		aq = {
 			{ name = "Cryptstalker Helm", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
@@ -343,6 +376,18 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Grand Marshal's Dirk", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 			{ name = "Grand Marshal's Mageblade", boss = "Nefarian", slot = "Off Hand", rarity = "Epic" },
 		},
+		scholomance = {
+			{ name = "Darkmantle Cap", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Darkmantle Spaulders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Darkmantle Tunic", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Darkmantle Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Darkmantle Pants", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Darkmantle Boots", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Darkmantle Bracers", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Darkmantle Gloves", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Mirah's Song", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+			{ name = "Bonescraper", boss = "Darkmaster Gandling", slot = "Off Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Bonescythe Cover", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Bonescythe Spaulders", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
@@ -430,6 +475,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Bindings", boss = "Emperor Dagran Thaurissan", slot = "Wrist", rarity = "Epic" },
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
+		},
+		scholomance = {
+			{ name = "Virtuous Crown", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Virtuous Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Virtuous Robe", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Virtuous Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Virtuous Skirt", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Virtuous Sandals", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Virtuous Bracers", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Virtuous Gloves", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Staff of Metanoia", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
 		},
 		aq = {
 			{ name = "Circlet of Faith", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
@@ -527,6 +583,18 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "High Warlord's Battle Mace", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 			{ name = "High Warlord's Shield Wall", boss = "Nefarian", slot = "Off Hand", rarity = "Epic" },
 		},
+		scholomance = {
+			{ name = "Coif of The Five Thunders", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Pauldrons of The Five Thunders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Vest of The Five Thunders", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Cord of The Five Thunders", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Kilt of The Five Thunders", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Boots of The Five Thunders", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Bindings of The Five Thunders", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Gauntlets of The Five Thunders", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Hand of Edward the Odd", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+			{ name = "Crest of Retribution", boss = "Darkmaster Gandling", slot = "Off Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Earthshatter Helm", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Earthshatter Spaulders", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
@@ -615,6 +683,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
+		scholomance = {
+			{ name = "Sorcerer's Crown", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Sorcerer's Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Sorcerer's Robes", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Sorcerer's Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Sorcerer's Leggings", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Sorcerer's Boots", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Sorcerer's Bindings", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Sorcerer's Gloves", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Rod of the Ogre Magi", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Frostfire Circlet", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Frostfire Mantle", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
@@ -701,6 +780,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
+		scholomance = {
+			{ name = "Deathmist Mask", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Deathmist Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Deathmist Robe", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Deathmist Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Deathmist Leggings", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Deathmist Sandals", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Deathmist Bracers", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Deathmist Wraps", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Headmaster's Charge", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Plagueheart Circlet", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Plagueheart Mantle", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
@@ -786,6 +876,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Bracers", boss = "Emperor Dagran Thaurissan", slot = "Wrist", rarity = "Epic" },
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
+		},
+		scholomance = {
+			{ name = "Feralheart Cowl", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Feralheart Spaulders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Feralheart Vest", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Feralheart Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Feralheart Kilt", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Feralheart Boots", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Feralheart Bracers", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Feralheart Gloves", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Warden Staff", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
 		},
 		aq = {
 			{ name = "Dreamwalker Cover", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
