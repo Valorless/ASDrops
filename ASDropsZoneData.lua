@@ -1,7 +1,7 @@
 -- Zone drop lists for the "still missing" row, written and maintained for ASDrops itself.
 -- Format: ASDROPS_ZONE_DROPS[class key][zone key] = { { name = "Item", boss = "Boss", slot = "Slot", rarity = "Rarity" }, ... }
 -- Class keys: warrior, paladin, hunter, rogue, priest, shaman, mage, warlock, druid.
--- Zone keys: elwynn, duskwood, wsg, ungoro, ab, feralas, arena, sm, av, brm, scholo, aq, naxx.
+-- Zone keys: elwynn, duskwood, wsg, ungoro, ab, feralas, arena, sm, av, brm, scholomance, aq, naxx.
 -- Names are the English item names. PvP zone drops use the Epic colour.
 ASDROPS_ZONE_DROPS = {
 	warrior = {
@@ -75,7 +75,7 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gauntlets", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Claymore", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
-		scholo = {
+		scholomance = {
 			{ name = "Helm of Heroism", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
 			{ name = "Spaulders of Heroism", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
 			{ name = "Breastplate of Heroism", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
@@ -172,7 +172,7 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gauntlets", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Demolisher", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
-		scholo = {
+		scholomance = {
 			{ name = "Soulforge Helm", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
 			{ name = "Soulforge Spaulders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
 			{ name = "Soulforge Breastplate", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
@@ -269,7 +269,7 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gauntlets", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Bullseye", boss = "Nefarian", slot = "Ranged", rarity = "Epic" },
 		},
-		scholo = {
+		scholomance = {
 			{ name = "Beastmaster's Cap", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
 			{ name = "Beastmaster's Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
 			{ name = "Beastmaster's Tunic", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
@@ -376,7 +376,7 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Grand Marshal's Dirk", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 			{ name = "Grand Marshal's Mageblade", boss = "Nefarian", slot = "Off Hand", rarity = "Epic" },
 		},
-		scholo = {
+		scholomance = {
 			{ name = "Darkmantle Cap", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
 			{ name = "Darkmantle Spaulders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
 			{ name = "Darkmantle Tunic", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
@@ -476,7 +476,7 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
-		scholo = {
+		scholomance = {
 			{ name = "Virtuous Crown", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
 			{ name = "Virtuous Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
 			{ name = "Virtuous Robe", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
@@ -583,7 +583,7 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "High Warlord's Battle Mace", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 			{ name = "High Warlord's Shield Wall", boss = "Nefarian", slot = "Off Hand", rarity = "Epic" },
 		},
-		scholo = {
+		scholomance = {
 			{ name = "Coif of The Five Thunders", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
 			{ name = "Pauldrons of The Five Thunders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
 			{ name = "Vest of The Five Thunders", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
@@ -683,7 +683,7 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
-		scholo = {
+		scholomance = {
 			{ name = "Sorcerer's Crown", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
 			{ name = "Sorcerer's Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
 			{ name = "Sorcerer's Robes", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
@@ -780,7 +780,7 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
-		scholo = {
+		scholomance = {
 			{ name = "Deathmist Mask", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
 			{ name = "Deathmist Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
 			{ name = "Deathmist Robe", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
@@ -877,7 +877,7 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
-		scholo = {
+		scholomance = {
 			{ name = "Feralheart Cowl", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
 			{ name = "Feralheart Spaulders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
 			{ name = "Feralheart Vest", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
