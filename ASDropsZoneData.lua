@@ -376,6 +376,18 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Grand Marshal's Dirk", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 			{ name = "Grand Marshal's Mageblade", boss = "Nefarian", slot = "Off Hand", rarity = "Epic" },
 		},
+		scholo = {
+			{ name = "Darkmantle Cap", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Darkmantle Spaulders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Darkmantle Tunic", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Darkmantle Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Darkmantle Pants", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Darkmantle Boots", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Darkmantle Bracers", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Darkmantle Gloves", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Mirah's Song", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+			{ name = "Bonescraper", boss = "Darkmaster Gandling", slot = "Off Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Bonescythe Cover", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Bonescythe Spaulders", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
