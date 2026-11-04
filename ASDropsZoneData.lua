@@ -172,6 +172,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gauntlets", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Demolisher", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
+		scholo = {
+			{ name = "Soulforge Helm", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Soulforge Spaulders", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Soulforge Breastplate", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Soulforge Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Soulforge Legplates", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Soulforge Boots", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Soulforge Bracers", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Soulforge Gauntlets", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Hammer of the Grand Crusader", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Redemption Helm", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Redemption Pauldrons", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
