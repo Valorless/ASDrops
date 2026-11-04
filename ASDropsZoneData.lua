@@ -780,6 +780,17 @@ ASDROPS_ZONE_DROPS = {
 			{ name = "Field Marshal's Gloves", boss = "Majordomo Executus", slot = "Hands", rarity = "Epic" },
 			{ name = "Grand Marshal's Stave", boss = "Nefarian", slot = "Main Hand", rarity = "Epic" },
 		},
+		scholo = {
+			{ name = "Deathmist Mask", boss = "Kirtonos the Herald", slot = "Head", rarity = "Epic" },
+			{ name = "Deathmist Mantle", boss = "Kirtonos the Herald", slot = "Shoulder", rarity = "Epic" },
+			{ name = "Deathmist Robe", boss = "Ras Frostwhisper", slot = "Chest", rarity = "Epic" },
+			{ name = "Deathmist Belt", boss = "Ras Frostwhisper", slot = "Waist", rarity = "Epic" },
+			{ name = "Deathmist Leggings", boss = "Doctor Theolen Krastinov", slot = "Legs", rarity = "Epic" },
+			{ name = "Deathmist Sandals", boss = "Doctor Theolen Krastinov", slot = "Feet", rarity = "Epic" },
+			{ name = "Deathmist Bracers", boss = "Lord Alexei Barov", slot = "Wrist", rarity = "Epic" },
+			{ name = "Deathmist Wraps", boss = "Lord Alexei Barov", slot = "Hands", rarity = "Epic" },
+			{ name = "Headmaster's Charge", boss = "Darkmaster Gandling", slot = "Main Hand", rarity = "Epic" },
+		},
 		aq = {
 			{ name = "Plagueheart Circlet", boss = "Kurinnaxx", slot = "Head", rarity = "Legendary" },
 			{ name = "Plagueheart Mantle", boss = "General Rajaxx", slot = "Shoulder", rarity = "Legendary" },
