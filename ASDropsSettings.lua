@@ -20,17 +20,17 @@ local function ZoneDB()
 end
 
 local OPTIONS = {
-	{ key = "onTop", label = "Show above level-up screen", needsOnTopApi = true,
+	{ key = "onTop", header = "General", label = "Show above level-up screen", needsOnTopApi = true,
 		tip = "Keep ASDrops (rows, settings and tooltips) visible and clickable over the level-up and jewelry cards. The bag mirror always stays under them.",
 		get = function() return ASDropsOnTopEnabled(); end,
 		set = function(on) MainDB().onTopOff = (not on) and true or nil; ASDropsApplyOnTop(); end },
-	{ key = "barShown", gap = true, label = "Show the loot bar", tip = "Show or hide the row of loot received this run.",
+	{ key = "barShown", header = "Rows", label = "Show the loot bar", tip = "Show or hide the row of loot received this run.",
 		get = function() return not MainDB().barHidden; end,
 		set = function(on) MainDB().barHidden = (not on) and true or nil; if ( ASDropsRefreshBar ) then ASDropsRefreshBar(); end end },
 	{ key = "missingShown", label = "Show the missing-items row", tip = "Show or hide the row of items from this zone that you haven't collected yet.",
 		get = function() return not ZoneDB().hidden; end,
 		set = function(on) ZoneDB().hidden = (not on) and true or false; if ( ASDropsRefreshMissing ) then ASDropsRefreshMissing(); end end },
-	{ key = "showCollected", label = "Show collected items", gap = true,
+	{ key = "showCollected", label = "Show collected items", header = "Missing-items row",
 		tip = "Also list the zone's items you have already collected in the missing-items row, in boss order.",
 		get = function() return ZoneDB().showCollected and true or false; end,
 		set = function(on) ZoneDB().showCollected = on and true or false; if ( ASDropsRefreshMissing ) then ASDropsRefreshMissing(); end end },
@@ -118,17 +118,14 @@ local function CreateWindow()
 	ASDropsKeepOnTop(close);
 	close:SetPoint("TOPRIGHT", window, "TOPRIGHT", -6, -6);
 
-	local rowsLabel = window:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall");
-	rowsLabel:SetPoint("TOPLEFT", window, "TOPLEFT", 20, -42);
-	rowsLabel:SetText("Rows");
-	local y = -54;
+	local y = -42;
 	for i = 1, table.getn(OPTIONS) do
 		local option = OPTIONS[i];
-		if ( option.gap ) then
-			y = y - 10;
-			local missingLabel = window:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall");
-			missingLabel:SetPoint("TOPLEFT", window, "TOPLEFT", 20, y - 2);
-			missingLabel:SetText("Missing-items row");
+		if ( option.header ) then
+			if ( i > 1 ) then y = y - 10; end
+			local headerLabel = window:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall");
+			headerLabel:SetPoint("TOPLEFT", window, "TOPLEFT", 20, y - 2);
+			headerLabel:SetText(option.header);
 			y = y - 14;
 		end
 		CreateCheckbox(option, i, y);
