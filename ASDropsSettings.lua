@@ -20,7 +20,7 @@ local function ZoneDB()
 end
 
 local OPTIONS = {
-	{ key = "onTop", header = "General", label = "Show above level-up screen", needsOnTopApi = true,
+	{ key = "onTop", header = "General", label = "Always on-top", needsOnTopApi = true,
 		tip = "Keep ASDrops (rows, settings and tooltips) visible and clickable over the level-up and jewelry cards. The bag mirror always stays under them.",
 		get = function() return ASDropsOnTopEnabled(); end,
 		set = function(on) MainDB().onTopOff = (not on) and true or nil; ASDropsApplyOnTop(); end },
