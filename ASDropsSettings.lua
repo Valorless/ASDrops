@@ -1,6 +1,7 @@
 -- Settings window and minimap button.
 -- Row visibility: ASDropsDB.barHidden (loot bar) and ASDropsZoneDB.hidden (missing row, also /asmissing hide).
 -- Missing-row options (all default off) live in ASDropsZoneDB: showCollected, greyCollected, checkCollected.
+-- "Show above level-up screen" is ASDropsDB.onTopOff (nil = on, the default).
 -- The minimap button angle is saved in ASDropsDB.minimapAngle.
 local window;
 local mmButton;
@@ -19,7 +20,11 @@ local function ZoneDB()
 end
 
 local OPTIONS = {
-	{ key = "barShown", label = "Show the loot bar", tip = "Show or hide the row of loot received this run.",
+	{ key = "onTop", label = "Show above level-up screen", needsOnTopApi = true,
+		tip = "Keep ASDrops (rows, settings and tooltips) visible and clickable over the level-up and jewelry cards. The bag mirror always stays under them.",
+		get = function() return ASDropsOnTopEnabled(); end,
+		set = function(on) MainDB().onTopOff = (not on) and true or nil; ASDropsApplyOnTop(); end },
+	{ key = "barShown", gap = true, label = "Show the loot bar", tip = "Show or hide the row of loot received this run.",
 		get = function() return not MainDB().barHidden; end,
 		set = function(on) MainDB().barHidden = (not on) and true or nil; if ( ASDropsRefreshBar ) then ASDropsRefreshBar(); end end },
 	{ key = "missingShown", label = "Show the missing-items row", tip = "Show or hide the row of items from this zone that you haven't collected yet.",
@@ -47,7 +52,7 @@ local function UpdateCheckboxes()
 		local box = checkboxes[option.key];
 		box:SetChecked(option.get() and 1 or nil);
 		local text = getglobal(box:GetName() .. "Text");
-		if ( option.needsCollected and not collectedOn ) then
+		if ( ( option.needsCollected and not collectedOn ) or ( option.needsOnTopApi and not AZS_SetOnTopOfScreens ) ) then
 			box:Disable();
 			if ( text ) then text:SetTextColor(0.5, 0.5, 0.5); end
 		else
@@ -74,6 +79,9 @@ local function CreateCheckbox(option, index, y)
 		GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
 		GameTooltip:SetText(this.option.label, 1, 0.82, 0);
 		GameTooltip:AddLine(this.option.tip, 0.9, 0.9, 0.9, 1);
+		if ( this.option.needsOnTopApi and not AZS_SetOnTopOfScreens ) then
+			GameTooltip:AddLine("Not available: this game version has no on-top support.", 1, 0.3, 0.3, 1);
+		end
 		GameTooltip:Show();
 	end);
 	box:SetScript("OnLeave", function() GameTooltip:Hide(); end);
@@ -214,8 +222,10 @@ end
 
 local starter = CreateFrame("Frame", "ASDropsSettingsEvents");
 ASDropsKeepOnTop(starter);
+starter:RegisterEvent("VARIABLES_LOADED");
 starter:RegisterEvent("PLAYER_ENTERING_WORLD");
 starter:SetScript("OnEvent", function()
+	ASDropsApplyOnTop();
 	if ( not mmButton ) then CreateMinimapButton(); end
 	if ( window ) then UpdateCheckboxes(); end
 end);
