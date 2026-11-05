@@ -1,12 +1,32 @@
 -- Shared helper (this file loads first): keeps a named frame and its children over the
 -- level-up/jewelry cards. Call it for every frame ASDrops creates; the frame needs a global name.
-function ASDropsKeepOnTop(frame)
+-- The player can turn this off in the settings (ASDropsDB.onTopOff), so every frame is remembered
+-- and ASDropsApplyOnTop() re-applies the current setting to all of them live.
+local onTopFrames = {};
+
+function ASDropsOnTopEnabled()
+	return not ( type(ASDropsDB) == "table" and ASDropsDB.onTopOff );
+end;
+
+local function SetOnTop(frame, on)
 	if ( AZS_SetOnTopOfScreens and frame ) then
-		pcall(AZS_SetOnTopOfScreens, frame, true);
+		pcall(AZS_SetOnTopOfScreens, frame, on);
+	end
+end
+
+function ASDropsKeepOnTop(frame)
+	if ( not frame ) then return; end
+	table.insert(onTopFrames, frame);
+	if ( ASDropsOnTopEnabled() ) then SetOnTop(frame, true); end
+end;
+
+function ASDropsApplyOnTop()
+	local on = ASDropsOnTopEnabled();
+	for i = 1, table.getn(onTopFrames) do
+		SetOnTop(onTopFrames[i], on);
 	end
 end;
 ASDropsKeepOnTop("GameTooltip");
-
 -- Standalone English native item-icon fallback, derived from the local SDUI catalog.
 ASDROPS_LOOT_ICONS = {
         ["Acolyte's Belt"] = "Interface\\Icons\\INV_Belt_01",
